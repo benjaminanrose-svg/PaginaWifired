@@ -751,61 +751,70 @@ a:hover { color: var(--color-accent-200); }
     <figure class="blueprint wf-armed" style="margin:0; padding:28px; background:rgba(0,0,0,.18); position:relative; overflow:hidden">
       <i class="corner tl" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i><i class="corner tr" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i><i class="corner bl" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i><i class="corner br" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i>
       <span style="display:block; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-accent-300); margin-bottom:16px">Esquema de red · WF-NODO-01</span>
-      <svg viewBox="0 0 520 250" style="width:100%; height:auto; display:block" aria-label="Esquema de red: data center PIT, central Melipilla, OLT y dos splitters 1:8 en cascada hasta los hogares">
+      <svg viewBox="0 0 520 260" style="width:100%; height:auto; display:block" aria-label="Esquema de red: data center PIT, central Melipilla, OLT y dos splitters 1:8 en paralelo, cada uno derivando a tres hogares">
         <!-- Fibra · enlaces principales -->
         <g stroke="var(--color-accent-300)" fill="none" stroke-width="1.1">
-          <path d="M68 116 H120" stroke-dasharray="6 8" style="animation:wf-flow 6s linear infinite"></path>
-          <path d="M160 116 H207" stroke-dasharray="6 8" style="animation:wf-flow 7s linear infinite"></path>
-          <path d="M257 116 H310" stroke-dasharray="6 8" style="animation:wf-flow 6.5s linear infinite"></path>
-          <path d="M322 116 H390" stroke-dasharray="6 8" style="animation:wf-flow 8s linear infinite"></path>
-          <path d="M396 116 C 420 116, 428 66, 452 66" stroke-dasharray="5 9" style="animation:wf-flow 8s linear infinite"></path>
-          <path d="M396 116 H452" stroke-dasharray="5 9" style="animation:wf-flow 7s linear infinite"></path>
-          <path d="M396 116 C 420 116, 428 172, 452 172" stroke-dasharray="5 9" style="animation:wf-flow 9s linear infinite"></path>
+          <path d="M68 120 H120" stroke-dasharray="6 8" style="animation:wf-flow 6s linear infinite"></path>
+          <path d="M160 120 H207" stroke-dasharray="6 8" style="animation:wf-flow 7s linear infinite"></path>
+          <path d="M257 120 C285 120, 310 62, 334 62" stroke-dasharray="6 8" style="animation:wf-flow 6.5s linear infinite"></path>
+          <path d="M257 120 C285 120, 310 192, 334 192" stroke-dasharray="6 8" style="animation:wf-flow 7.5s linear infinite"></path>
+          <path d="M346 62 C375 62, 420 30, 448 30" stroke-dasharray="5 9" style="animation:wf-flow 8s linear infinite"></path>
+          <path d="M346 62 H448" stroke-dasharray="5 9" style="animation:wf-flow 7s linear infinite"></path>
+          <path d="M346 62 C375 62, 420 94, 448 94" stroke-dasharray="5 9" style="animation:wf-flow 9s linear infinite"></path>
+          <path d="M346 192 C375 192, 420 160, 448 160" stroke-dasharray="5 9" style="animation:wf-flow 8.5s linear infinite"></path>
+          <path d="M346 192 H448" stroke-dasharray="5 9" style="animation:wf-flow 7.5s linear infinite"></path>
+          <path d="M346 192 C375 192, 420 224, 448 224" stroke-dasharray="5 9" style="animation:wf-flow 9.5s linear infinite"></path>
         </g>
         <!-- Fibra · derivaciones 1:8 sugeridas -->
         <g stroke="var(--color-accent-300)" fill="none" stroke-width="1" opacity=".38">
-          <path d="M316 116 L346 82 M316 116 L346 99 M316 116 L346 133 M316 116 L346 150"></path>
-          <path d="M396 116 L424 92 M396 116 L424 140"></path>
+          <path d="M340 62 L358 46 M340 62 L358 78"></path>
+          <path d="M340 192 L358 176 M340 192 L358 208"></path>
         </g>
         <!-- Nube · Data Center PIT -->
         <g fill="none" stroke="var(--color-bg)" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round">
-          <g transform="translate(20,92) scale(2)"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></g>
+          <g transform="translate(20,96) scale(2)"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></g>
         </g>
         <!-- Central Melipilla -->
         <g fill="none" stroke="var(--color-bg)" stroke-width="1.2" stroke-linejoin="round">
-          <rect x="124" y="98" width="32" height="40"></rect>
-          <path d="M140 98 V85"></path>
-          <circle cx="140" cy="83" r="1.7" fill="var(--color-bg)" stroke="none"></circle>
-          <path d="M133 86 q7 -7 14 0 M129 90 q11 -11 22 0" stroke-width="0.8" opacity=".5"></path>
-          <path d="M124 112 H156 M124 126 H156" stroke-width="0.8" opacity=".5"></path>
-          <rect x="135" y="129" width="10" height="9"></rect>
+          <rect x="124" y="102" width="32" height="40"></rect>
+          <path d="M140 102 V89"></path>
+          <circle cx="140" cy="87" r="1.7" fill="var(--color-bg)" stroke="none"></circle>
+          <path d="M133 90 q7 -7 14 0 M129 94 q11 -11 22 0" stroke-width="0.8" opacity=".5"></path>
+          <path d="M124 116 H156 M124 130 H156" stroke-width="0.8" opacity=".5"></path>
+          <rect x="135" y="133" width="10" height="9"></rect>
         </g>
         <!-- OLT -->
-        <rect x="209" y="92" width="46" height="48" fill="none" stroke="var(--color-bg)" stroke-width="1.2"></rect>
-        <text x="232" y="121" text-anchor="middle" fill="var(--color-bg)" font-family="Barlow Condensed, sans-serif" font-size="15" letter-spacing="1">OLT</text>
+        <rect x="209" y="96" width="46" height="48" fill="none" stroke="var(--color-bg)" stroke-width="1.2"></rect>
+        <text x="232" y="125" text-anchor="middle" fill="var(--color-bg)" font-family="Barlow Condensed, sans-serif" font-size="15" letter-spacing="1">OLT</text>
         <!-- Splitter 1 · 1:8 -->
-        <g><circle cx="316" cy="116" r="6" fill="var(--color-accent-300)"></circle><circle cx="316" cy="116" r="6" fill="none" stroke="var(--color-accent-300)" style="animation:wf-ring 2.8s ease-out infinite"></circle></g>
+        <g><circle cx="340" cy="62" r="6" fill="var(--color-accent-300)"></circle><circle cx="340" cy="62" r="6" fill="none" stroke="var(--color-accent-300)" style="animation:wf-ring 2.8s ease-out infinite"></circle></g>
         <!-- Splitter 2 · 1:8 -->
-        <g><circle cx="396" cy="116" r="6" fill="var(--color-accent-300)"></circle><circle cx="396" cy="116" r="6" fill="none" stroke="var(--color-accent-300)" style="animation:wf-ring 3.2s ease-out infinite"></circle></g>
-        <!-- Hogares · clientes -->
+        <g><circle cx="340" cy="192" r="6" fill="var(--color-accent-300)"></circle><circle cx="340" cy="192" r="6" fill="none" stroke="var(--color-accent-300)" style="animation:wf-ring 3.2s ease-out infinite"></circle></g>
+        <!-- Hogares · grupo superior (Splitter 1) -->
         <g fill="none" stroke="var(--color-bg)" stroke-width="1.2" stroke-linejoin="round">
-          <path d="M452 58 l11 -9 l11 9 v16 h-22 z"></path>
-          <path d="M452 108 l11 -9 l11 9 v16 h-22 z"></path>
-          <path d="M452 164 l11 -9 l11 9 v16 h-22 z"></path>
+          <path d="M448 22 l11 -9 l11 9 v16 h-22 z"></path>
+          <path d="M448 54 l11 -9 l11 9 v16 h-22 z"></path>
+          <path d="M448 86 l11 -9 l11 9 v16 h-22 z"></path>
+        </g>
+        <!-- Hogares · grupo inferior (Splitter 2) -->
+        <g fill="none" stroke="var(--color-bg)" stroke-width="1.2" stroke-linejoin="round">
+          <path d="M448 152 l11 -9 l11 9 v16 h-22 z"></path>
+          <path d="M448 184 l11 -9 l11 9 v16 h-22 z"></path>
+          <path d="M448 216 l11 -9 l11 9 v16 h-22 z"></path>
         </g>
         <!-- Etiquetas -->
         <g text-anchor="middle" font-family="Barlow, sans-serif" font-size="8.5" letter-spacing="1" fill="color-mix(in srgb, var(--color-bg) 62%, transparent)">
-          <text x="44" y="151">DATA CENTER</text>
-          <text x="44" y="161">PIT</text>
-          <text x="140" y="151">CENTRAL</text>
-          <text x="140" y="161">MELIPILLA</text>
-          <text x="316" y="151">SPLITTER 1</text>
-          <text x="396" y="151">SPLITTER 2</text>
-          <text x="463" y="205">CLIENTES</text>
+          <text x="44" y="159">DATA CENTER</text>
+          <text x="44" y="169">PIT</text>
+          <text x="140" y="159">CENTRAL</text>
+          <text x="140" y="169">MELIPILLA</text>
+          <text x="340" y="112">SPLITTER 1</text>
+          <text x="340" y="242">SPLITTER 2</text>
+          <text x="463" y="133">CLIENTES</text>
         </g>
         <g text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="9.5" letter-spacing="1.5" fill="var(--color-accent-300)">
-          <text x="316" y="161">1:8</text>
-          <text x="396" y="161">1:8</text>
+          <text x="340" y="122">1:8</text>
+          <text x="340" y="252">1:8</text>
         </g>
       </svg>
     </figure>
