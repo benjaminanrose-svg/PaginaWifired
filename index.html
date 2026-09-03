@@ -478,6 +478,18 @@ a:hover { color: var(--color-accent-200); }
 .wf-heroh1 .wf-ln:nth-child(3) > span { animation-delay: .40s }
 .wf-riser { opacity: 0; animation: wf-rise .8s cubic-bezier(.22,.61,.36,1) both; }
 .wf-riser.d1 { animation-delay: .5s } .wf-riser.d2 { animation-delay: .62s } .wf-riser.d3 { animation-delay: .74s }
+/* --- Mapa sucursal · CartoDB Dark + pin con pulso neón --- */
+#wf-map { height: 210px; background: #0d1520; }
+#wf-map .leaflet-container { background: #0d1520; font-family: var(--font-body); outline: none; }
+#wf-map .leaflet-control-attribution { background: rgba(10,17,24,.74); color: color-mix(in srgb, var(--color-bg) 52%, transparent); font-size: 9.5px; padding: 2px 6px; }
+#wf-map .leaflet-control-attribution a { color: var(--color-accent-300); }
+.wf-pin { display: block; position: relative; width: 14px; height: 14px; }
+.wf-pin b, .wf-pin i { position: absolute; inset: 0; border-radius: 50%; display: block; }
+.wf-pin b { background: var(--color-accent-300); box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent-300) 90%, transparent), 0 0 3px #fff inset; }
+.wf-pin i { border: 1px solid var(--color-accent-300); animation: wf-pinpulse 2.8s ease-out infinite; }
+.wf-pin i + i { animation-delay: 1.4s; }
+@keyframes wf-pinpulse { 0% { transform: scale(1); opacity: .75 } 100% { transform: scale(3.6); opacity: 0 } }
+@media (prefers-reduced-motion: reduce) { .wf-pin i { animation: none !important; opacity: .3 !important; } }
 /* --- Hero · carrusel de promociones (contenido en promotionsData, ver script al final) --- */
 .wf-slides { display: grid; width: 100%; }
 .wf-slide { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s ease; }
@@ -520,6 +532,8 @@ a:hover { color: var(--color-accent-200); }
 [hidden] { display: none !important; }
 .wf-lift:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
 </style>
+<link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw==" crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body>
 <div id="wf-root" style="position:relative; min-height:100%; overflow-x:hidden; background:#16222e; color:var(--color-bg)">
@@ -977,14 +991,12 @@ a:hover { color: var(--color-accent-200); }
         </a>
         <div style="display:flex; align-items:flex-start; gap:14px; padding:18px 0">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-700); flex:none; margin-top:2px"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <span style="font-size:14.5px; line-height:1.6; color:var(--color-neutral-800)"><span style="display:inline-flex; align-items:center; gap:7px; margin-bottom:6px; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-accent-800)"><span style="width:7px; height:7px; background:var(--color-accent); display:inline-block; animation:wf-blink 2s ease-in-out infinite"></span><span class="wf-horario"></span></span><br>Sucursal en el centro de Melipilla<br>Lunes a viernes 9:00–19:00 · Sábado 10:00–14:00<br><span style="color:var(--color-neutral-600); font-size:13px">Urgencias 24/7 por WhatsApp</span></span>
+          <span style="font-size:14.5px; line-height:1.6; color:var(--color-neutral-800)"><span style="display:inline-flex; align-items:center; gap:7px; margin-bottom:6px; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-accent-800)"><span style="width:7px; height:7px; background:var(--color-accent); display:inline-block; animation:wf-blink 2s ease-in-out infinite"></span><span class="wf-horario"></span></span><br>Sucursal en el centro de Melipilla<br>Lunes a Sábado: 9:00 - 18:00 hrs<br>Domingos cerrado<br><span style="color:var(--color-neutral-600); font-size:13px">Emergencias por WhatsApp: 8:00 - 18:00 hrs</span></span>
         </div>
       </div>
       <div class="blueprint" style="margin-top:22px; padding:8px; position:relative; background:var(--color-accent-900)">
         <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
-        <div style="height:210px; overflow:hidden; position:relative">
-          <iframe title="Ubicación WiFired en Melipilla" src="https://www.openstreetmap.org/export/embed.html?bbox=-71.2240%2C-33.6950%2C-71.2066%2C-33.6828&amp;layer=mapnik&amp;marker=-33.6889%2C-71.2153" loading="lazy" style="width:calc(100% + 60px); height:266px; border:0; display:block; margin:-28px -30px; filter:invert(1) hue-rotate(185deg) brightness(.92) contrast(.92) saturate(1.15)"></iframe>
-        </div>
+        <div id="wf-map" role="img" aria-label="Mapa oscuro con la ubicación de la sucursal WiFired en el centro de Melipilla"></div>
         <a href="https://www.openstreetmap.org/?mlat=-33.6889&amp;mlon=-71.2153#map=16/-33.6889/-71.2153" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:6px; margin-top:8px; padding:0 2px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--color-accent-700); text-decoration:none">Ver mapa completo →</a>
       </div>
     </div>
@@ -1125,12 +1137,44 @@ a:hover { color: var(--color-accent-200); }
     });
   }
 
-  /* ---------- Estado de la sucursal ---------- */
+  /* ---------- Estado de la sucursal ----------
+     ABIERTA: Lunes a Sábado, de 09:00 a 18:00 hrs. Domingos cerrado.
+     Se calcula con la hora de Chile, no con el reloj del visitante, para que
+     sea correcto aunque entren desde otro país o tengan mal la hora. */
   (function () {
-    var d = new Date(), h = d.getHours(), day = d.getDay();
-    var abierto = (day >= 1 && day <= 5 && h >= 9 && h < 19) || (day === 6 && h >= 10 && h < 14);
     var el = document.querySelector('.wf-horario');
-    if (el) el.textContent = abierto ? 'Sucursal abierta ahora' : 'Sucursal cerrada · escríbenos';
+    if (!el) return;
+
+    var DIAS = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };
+
+    function ahoraEnChile() {
+      try {
+        var partes = new Intl.DateTimeFormat('en-US', {
+          timeZone: 'America/Santiago', weekday: 'short', hour: '2-digit', hourCycle: 'h23'
+        }).formatToParts(new Date());
+        var dia = null, hora = null;
+        partes.forEach(function (p) {
+          if (p.type === 'weekday') dia = DIAS[p.value.toLowerCase()];
+          if (p.type === 'hour') hora = parseInt(p.value, 10);
+        });
+        if (dia != null && hora != null && !isNaN(hora)) return { dia: dia, hora: hora };
+      } catch (e) { /* navegador sin zonas horarias: usamos el reloj local */ }
+      var d = new Date();
+      return { dia: d.getDay(), hora: d.getHours() };
+    }
+
+    /* true = sucursal abierta ahora · false = cerrada */
+    function estaAbierto() {
+      var t = ahoraEnChile();
+      return t.dia >= 1 && t.dia <= 6 && t.hora >= 9 && t.hora < 18;
+    }
+
+    function pintar() {
+      el.textContent = estaAbierto() ? 'Sucursal abierta ahora' : 'Sucursal cerrada · escríbenos';
+    }
+
+    pintar();
+    setInterval(pintar, 60000); // se actualiza sola si cruzan la hora de apertura o cierre
   })();
 
   /* ---------- Barra de progreso + reveal + contadores ---------- */
@@ -1429,6 +1473,60 @@ a:hover { color: var(--color-accent-200); }
   });
 
   applyPause();
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script>
+/* ==========================================================================
+   MAPA DE LA SUCURSAL · estilo oscuro (CartoDB Dark Matter)
+   Si necesitas mover el pin, cambia SUCURSAL. El enlace "Ver mapa completo"
+   apunta al mismo punto, así que ajústalo también si cambias las coordenadas.
+   ========================================================================== */
+(function () {
+  var SUCURSAL = { lat: -33.6889, lon: -71.2153, zoom: 16 };
+
+  function iniciar() {
+    var cont = document.getElementById('wf-map');
+    if (!cont || typeof L === 'undefined' || cont.dataset.listo) return;
+    cont.dataset.listo = '1';
+
+    // Mapa de solo lectura: no se arrastra ni hace zoom, así no secuestra el
+    // scroll de la página. Para explorar está el botón "Ver mapa completo".
+    var map = L.map(cont, {
+      center: [SUCURSAL.lat, SUCURSAL.lon],
+      zoom: SUCURSAL.zoom,
+      zoomControl: false, dragging: false, scrollWheelZoom: false,
+      doubleClickZoom: false, touchZoom: false, boxZoom: false, keyboard: false
+    });
+
+    // Base oscura (Esri Dark Gray Canvas). No requiere clave de API.
+    // OJO: CartoDB Dark ya no sirve tiles gratis sin clave: los devuelve con la
+    // marca de agua "API KEY REQUIRED" encima. Por eso no se usa aquí.
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 16,
+      attribution: 'Tiles &copy; Esri'
+    }).addTo(map);
+
+    // Capa de nombres de calles encima de la base
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 16
+    }).addTo(map);
+
+    L.marker([SUCURSAL.lat, SUCURSAL.lon], {
+      keyboard: false,
+      interactive: false,
+      icon: L.divIcon({
+        className: '',
+        html: '<span class="wf-pin"><i></i><i></i><b></b></span>',
+        iconSize: [14, 14],
+        iconAnchor: [7, 7]
+      })
+    }).addTo(map);
+  }
+
+  if (document.readyState === 'complete') iniciar();
+  else window.addEventListener('load', iniciar);
 })();
 </script>
 </body>

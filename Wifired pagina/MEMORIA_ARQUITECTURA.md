@@ -12,6 +12,50 @@
 | Docs proyecto | — | `README.md` | Documentación general del repo |
 | Dev server | — | `.claude/launch.json` | Config servidor local (npx serve :8080) para preview |
 
+## Contacto · Horarios y estado de la sucursal
+
+**Horarios publicados** (texto en `index.html`, bloque de contacto):
+- Sucursal: **Lunes a Sábado 9:00 - 18:00 hrs**. Domingos cerrado.
+- Emergencias por WhatsApp: **8:00 - 18:00 hrs**.
+
+**Indicador dinámico** (`.wf-horario`, script "Estado de la sucursal"):
+
+| Función | Qué hace |
+|---------|----------|
+| `estaAbierto()` | `true` solo Lun-Sáb entre 09:00 y 17:59. `false` domingo o fuera de rango |
+| `ahoraEnChile()` | Obtiene día y hora en `America/Santiago` vía `Intl.DateTimeFormat` |
+| `pintar()` | Escribe "Sucursal abierta ahora" o "Sucursal cerrada · escríbenos" |
+
+- Usa **hora de Chile**, no el reloj del visitante: así es correcto aunque
+  entren desde otro país o tengan mal la hora del equipo.
+- Se refresca sola cada 60s, por si cruzan la hora de apertura o cierre con la
+  página abierta.
+- Si el navegador no soporta zonas horarias, cae al reloj local (respaldo).
+- **OJO:** el 24/7 de las secciones "Monitoreo del nodo" y "Red monitoreada"
+  se refiere al monitoreo automático de red, NO a atención de personas.
+  Esos NO se tocaron y no contradicen el horario de atención.
+
+## Contacto · Mapa oscuro de la sucursal
+
+| Elemento | Dónde | Detalle |
+|----------|-------|---------|
+| Contenedor | `#wf-map` | Alto 210px, fondo `#0d1520` |
+| Librería | Leaflet 1.9.4 | Desde cdnjs, con SRI verificado |
+| Base | Esri Dark Gray Canvas | Sin clave de API |
+| Etiquetas | Esri Dark Gray Reference | Nombres de calles |
+| Pin | `.wf-pin` + `wf-pinpulse` | Punto neón con 2 anillos de pulso |
+| Coordenadas | `SUCURSAL` en el script | lat -33.6889, lon -71.2153, zoom 16 |
+
+- **Por qué NO se usa CartoDB Dark:** desde hace un tiempo devuelve los tiles
+  con la marca de agua **"API KEY REQUIRED"** encima si no pagas clave.
+  Se probó y se descartó. Esri Dark Gray es oscuro y no pide clave.
+- El mapa es **de solo lectura** (sin arrastrar ni zoom) para que no secuestre
+  el scroll de la página. Para explorar está "Ver mapa completo".
+- La atribución "Tiles © Esri" es **obligatoria por licencia**: no quitarla.
+- `.wf-pin` necesita `display:block` porque es un `<span>` y si no, el ancho y
+  alto no se aplican y el pin queda invisible (ya pasó una vez).
+- Si mueves el pin, cambia `SUCURSAL` **y** el enlace "Ver mapa completo".
+
 ## Hero · Carrusel de promociones
 
 **DÓNDE EDITAR LAS OFERTAS:** `index.html` → último `<script>` del archivo →
