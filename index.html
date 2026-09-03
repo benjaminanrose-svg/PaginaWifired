@@ -457,7 +457,14 @@ a:hover { color: var(--color-accent-200); }
 @keyframes wf-blink { 0%,100% { opacity: 1 } 50% { opacity: .2 } }
 @keyframes wf-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
 @keyframes wf-flow { to { stroke-dashoffset: -1000 } }
-@keyframes wf-ring { 0% { r: 5; opacity: .6 } 100% { r: 30; opacity: 0 } }
+@keyframes wf-ring { 0% { transform: scale(1); opacity: .6 } 100% { transform: scale(5); opacity: 0 } }
+.wf-fiber { will-change: stroke-dashoffset; }
+.wf-fiber-l1 { animation: wf-flow 4s linear infinite; }
+.wf-fiber-l2 { animation: wf-flow 4s linear infinite; }
+.wf-fiber-l3 { animation: wf-flow 3s linear infinite; }
+.wf-fiber-l4 { animation: wf-flow 2.5s linear infinite; }
+.wf-ring-pulse { transform-box: fill-box; transform-origin: center; will-change: transform, opacity; animation: wf-ring 2.8s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) { .wf-fiber, .wf-ring-pulse { animation: none !important; } }
 @keyframes wf-fabring { 0% { transform: scale(1); opacity: .5 } 100% { transform: scale(1.6); opacity: 0 } }
 @keyframes wf-bob { 0%,100% { transform: translateY(0); opacity: .5 } 50% { transform: translateY(7px); opacity: 1 } }
 @keyframes wf-lineup { from { transform: translateY(110%) } to { transform: translateY(0) } }
@@ -752,18 +759,18 @@ a:hover { color: var(--color-accent-200); }
       <i class="corner tl" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i><i class="corner tr" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i><i class="corner bl" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i><i class="corner br" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i>
       <span style="display:block; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-accent-300); margin-bottom:16px">Esquema de red · WF-NODO-01</span>
       <svg viewBox="0 0 520 260" style="width:100%; height:auto; display:block" aria-label="Esquema de red: data center PIT, central Melipilla, OLT y dos splitters 1:8 en paralelo, cada uno derivando a tres hogares">
-        <!-- Fibra · enlaces principales -->
+        <!-- Fibra · enlaces principales (L1=backbone, L2=troncal, L3=distribución, L4=última milla) -->
         <g stroke="var(--color-accent-300)" fill="none" stroke-width="1.1">
-          <path d="M68 120 H120" stroke-dasharray="6 8" style="animation:wf-flow 6s linear infinite"></path>
-          <path d="M160 120 H207" stroke-dasharray="6 8" style="animation:wf-flow 7s linear infinite"></path>
-          <path d="M257 120 C285 120, 310 62, 334 62" stroke-dasharray="6 8" style="animation:wf-flow 6.5s linear infinite"></path>
-          <path d="M257 120 C285 120, 310 192, 334 192" stroke-dasharray="6 8" style="animation:wf-flow 7.5s linear infinite"></path>
-          <path d="M346 62 C375 62, 420 30, 448 30" stroke-dasharray="5 9" style="animation:wf-flow 8s linear infinite"></path>
-          <path d="M346 62 H448" stroke-dasharray="5 9" style="animation:wf-flow 7s linear infinite"></path>
-          <path d="M346 62 C375 62, 420 94, 448 94" stroke-dasharray="5 9" style="animation:wf-flow 9s linear infinite"></path>
-          <path d="M346 192 C375 192, 420 160, 448 160" stroke-dasharray="5 9" style="animation:wf-flow 8.5s linear infinite"></path>
-          <path d="M346 192 H448" stroke-dasharray="5 9" style="animation:wf-flow 7.5s linear infinite"></path>
-          <path d="M346 192 C375 192, 420 224, 448 224" stroke-dasharray="5 9" style="animation:wf-flow 9.5s linear infinite"></path>
+          <path class="wf-fiber wf-fiber-l1" d="M68 120 H120" stroke-dasharray="6 8"></path>
+          <path class="wf-fiber wf-fiber-l2" d="M160 120 H207" stroke-dasharray="6 8"></path>
+          <path class="wf-fiber wf-fiber-l3" d="M257 120 C285 120, 310 62, 334 62" stroke-dasharray="6 8"></path>
+          <path class="wf-fiber wf-fiber-l3" d="M257 120 C285 120, 310 192, 334 192" stroke-dasharray="6 8"></path>
+          <path class="wf-fiber wf-fiber-l4" d="M346 62 C375 62, 420 30, 448 30" stroke-dasharray="5 9"></path>
+          <path class="wf-fiber wf-fiber-l4" d="M346 62 H448" stroke-dasharray="5 9"></path>
+          <path class="wf-fiber wf-fiber-l4" d="M346 62 C375 62, 420 94, 448 94" stroke-dasharray="5 9"></path>
+          <path class="wf-fiber wf-fiber-l4" d="M346 192 C375 192, 420 160, 448 160" stroke-dasharray="5 9"></path>
+          <path class="wf-fiber wf-fiber-l4" d="M346 192 H448" stroke-dasharray="5 9"></path>
+          <path class="wf-fiber wf-fiber-l4" d="M346 192 C375 192, 420 224, 448 224" stroke-dasharray="5 9"></path>
         </g>
         <!-- Fibra · derivaciones 1:8 sugeridas -->
         <g stroke="var(--color-accent-300)" fill="none" stroke-width="1" opacity=".38">
@@ -787,9 +794,9 @@ a:hover { color: var(--color-accent-200); }
         <rect x="209" y="96" width="46" height="48" fill="none" stroke="var(--color-bg)" stroke-width="1.2"></rect>
         <text x="232" y="125" text-anchor="middle" fill="var(--color-bg)" font-family="Barlow Condensed, sans-serif" font-size="15" letter-spacing="1">OLT</text>
         <!-- Splitter 1 · 1:8 -->
-        <g><circle cx="340" cy="62" r="6" fill="var(--color-accent-300)"></circle><circle cx="340" cy="62" r="6" fill="none" stroke="var(--color-accent-300)" style="animation:wf-ring 2.8s ease-out infinite"></circle></g>
+        <g><circle cx="340" cy="62" r="6" fill="var(--color-accent-300)"></circle><circle class="wf-ring-pulse" cx="340" cy="62" r="6" fill="none" stroke="var(--color-accent-300)"></circle></g>
         <!-- Splitter 2 · 1:8 -->
-        <g><circle cx="340" cy="192" r="6" fill="var(--color-accent-300)"></circle><circle cx="340" cy="192" r="6" fill="none" stroke="var(--color-accent-300)" style="animation:wf-ring 3.2s ease-out infinite"></circle></g>
+        <g><circle cx="340" cy="192" r="6" fill="var(--color-accent-300)"></circle><circle class="wf-ring-pulse" cx="340" cy="192" r="6" fill="none" stroke="var(--color-accent-300)" style="animation-delay:.4s"></circle></g>
         <!-- Hogares · grupo superior (Splitter 1) -->
         <g fill="none" stroke="var(--color-bg)" stroke-width="1.2" stroke-linejoin="round">
           <path d="M448 22 l11 -9 l11 9 v16 h-22 z"></path>
