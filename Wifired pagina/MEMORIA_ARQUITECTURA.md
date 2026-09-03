@@ -112,7 +112,29 @@ Atributos que controlan el medidor (en el `<span>` del número):
 | Base | Esri Dark Gray Canvas | Sin clave de API |
 | Etiquetas | Esri Dark Gray Reference | Nombres de calles |
 | Pin | `.wf-pin` + `wf-pinpulse` | Punto neón con 2 anillos de pulso |
-| Coordenadas | `SUCURSAL` en el script | lat -33.6889, lon -71.2153, zoom 16 |
+| Coordenadas | `SUCURSAL` en el script | lat -33.6882825, lon -71.2168438, zoom 16 |
+
+### Dirección de la sucursal
+
+**C. Libertad 701 (Esq. Silva Chávez), Melipilla**
+
+- Coordenadas obtenidas del **nodo real donde se cruzan ambas calles** en
+  OpenStreetMap (consulta Overpass), no estimadas a ojo.
+- Aparece en 3 lugares, mantenerlos alineados si cambia:
+  1. `SUCURSAL` en el script del mapa
+  2. Texto de la tarjeta de contacto
+  3. `aria-label` del `#wf-map`
+- La garantía "Soporte local" dice "sucursal en el centro de Melipilla".
+  Es uno de los 5 textos protegidos: **no se toca**.
+
+### ⚠️ Zoom máximo del mapa: 16
+
+**No subir a 17.** Esri Dark Gray no tiene cartografía sobre z16 en Melipilla:
+a z17 los tiles responden HTTP 200 pero la imagen dice
+**"Map data not yet available"** (gris, sin calles).
+
+Lección: comprobar que un tile *cargue* no basta — hay que **mirarlo**.
+Un 200 con 256px puede ser una imagen de relleno.
 
 - **Por qué NO se usa CartoDB Dark:** desde hace un tiempo devuelve los tiles
   con la marca de agua **"API KEY REQUIRED"** encima si no pagas clave.
@@ -146,8 +168,8 @@ Atributos que controlan el medidor (en el `<span>` del número):
 
 ### Botón "Ver mapa completo"
 
-- Clase `.wf-maplink`. Apunta a la ficha oficial de Google Maps por CID:
-  `https://www.google.com/maps?cid=16146747442751394680`
+- Clase `.wf-maplink`. Apunta a la búsqueda directa en Google Maps:
+  `https://www.google.com/maps/search/?api=1&query=Libertad+701,+Silva+Chavez,+Melipilla`
 - `target="_blank"` + `rel="noopener noreferrer"` → abre pestaña nueva sin
   recargar ni afectar la landing.
 - Icono SVG de enlace externo + resplandor cian al pasar el cursor.
