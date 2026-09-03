@@ -12,6 +12,43 @@
 | Docs proyecto | — | `README.md` | Documentación general del repo |
 | Dev server | — | `.claude/launch.json` | Config servidor local (npx serve :8080) para preview |
 
+## Hero · Carrusel de promociones
+
+**DÓNDE EDITAR LAS OFERTAS:** `index.html` → último `<script>` del archivo →
+arreglo **`promotionsData`**. Es el único lugar a tocar para cambiar promos.
+
+Cada promoción tiene 4 campos:
+
+| Campo | Qué es |
+|-------|--------|
+| `badge` | Texto del recuadro superior (ej: "Promo lanzamiento") |
+| `titulo` | Arreglo de líneas del titular. Una línea por elemento |
+| `acento` | Índice de la línea que va en azul (0 = primera). `-1` = ninguna |
+| `texto` | Subtítulo descriptivo |
+
+Agregar o quitar promociones ajusta solo los puntos y la rotación.
+
+| Elemento | ID / Clase | Función |
+|----------|-----------|---------|
+| Contenedor carrusel | `#wf-hero-slider` | Envuelve las diapositivas |
+| Pista | `.wf-slides` | Grid que apila todas las slides en la misma celda |
+| Diapositiva | `.wf-slide` / `.is-active` | Fade 500ms; solo la activa es visible |
+| Puntos | `#wf-hero-dots` / `.wf-dot` | Barras finas sobre el buscador |
+| Barra progreso | `@keyframes wf-dotfill` | 6s lineal; su fin dispara el cambio |
+
+- **Autoplay:** 6s. No usa temporizador: lo dispara el `animationend` de la barra
+  del punto activo, así el indicador y la diapositiva nunca se desincronizan.
+- **Pausas** (se acumulan, se reanuda cuando no queda ninguna): cursor encima,
+  foco dentro, pestaña oculta, hero fuera de pantalla.
+- **Teclado:** flechas ← → sobre los puntos.
+- **Movimiento reducido:** sin autoplay, sin fade; los puntos siguen funcionando.
+- **Sin salto de maquetación:** todas las slides comparten la celda `1 / 1` del
+  grid, así la altura es la de la más alta y nada se mueve al cambiar.
+- **NO SE TOCA:** `#cobertura` (buscador) ni las métricas del pie son parte del
+  carrusel; quedan fijas. Verificado que el buscador sigue funcionando igual.
+- El HTML trae la 1ª diapositiva escrita como **respaldo si el JS no carga**;
+  al iniciar, el script reconstruye todo desde `promotionsData`.
+
 ## Animaciones del esquema de red (WF-NODO-01)
 
 | Clase CSS | Nivel | Duración | Velocidad |

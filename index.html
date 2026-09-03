@@ -470,6 +470,7 @@ a:hover { color: var(--color-accent-200); }
 @keyframes wf-bob { 0%,100% { transform: translateY(0); opacity: .5 } 50% { transform: translateY(7px); opacity: 1 } }
 @keyframes wf-lineup { from { transform: translateY(110%) } to { transform: translateY(0) } }
 @keyframes wf-rise { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: none } }
+.wf-heroh1 { font-family: var(--font-heading); font-weight: 600; font-size: clamp(46px,9.2vw,132px); line-height: .92; letter-spacing: .005em; text-transform: uppercase; margin: 0; color: var(--color-bg); }
 .wf-heroh1 .wf-ln { display: block; overflow: hidden; padding-bottom: .04em; }
 .wf-heroh1 .wf-ln > span { display: block; transform: translateY(110%); animation: wf-lineup 1s cubic-bezier(.16,1,.3,1) both; }
 .wf-heroh1 .wf-ln:nth-child(1) > span { animation-delay: .12s }
@@ -477,6 +478,22 @@ a:hover { color: var(--color-accent-200); }
 .wf-heroh1 .wf-ln:nth-child(3) > span { animation-delay: .40s }
 .wf-riser { opacity: 0; animation: wf-rise .8s cubic-bezier(.22,.61,.36,1) both; }
 .wf-riser.d1 { animation-delay: .5s } .wf-riser.d2 { animation-delay: .62s } .wf-riser.d3 { animation-delay: .74s }
+/* --- Hero · carrusel de promociones (contenido en promotionsData, ver script al final) --- */
+.wf-slides { display: grid; width: 100%; }
+.wf-slide { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s ease; }
+.wf-slide.is-active { opacity: 1; visibility: visible; }
+.wf-hero-badge { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; color: var(--color-accent-200); border: 1px solid color-mix(in srgb, var(--color-accent-200) 38%, transparent); padding: 7px 14px; margin-bottom: clamp(22px,3vw,34px); }
+.wf-hero-badge > i { width: 7px; height: 7px; background: var(--color-accent-300); display: inline-block; animation: wf-blink 1.8s ease-in-out infinite; }
+.wf-hero-sub { font-size: clamp(16px,1.7vw,20px); line-height: 1.6; max-width: 52ch; margin: clamp(24px,3vw,34px) 0 0; color: color-mix(in srgb, var(--color-bg) 76%, transparent); }
+.wf-dots { display: flex; gap: 10px; justify-content: center; margin-top: clamp(26px,3.4vw,38px); }
+.wf-dots[hidden] { display: none !important; }
+.wf-dot { width: 34px; height: 28px; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: center; }
+.wf-dot > span { position: relative; display: block; width: 100%; height: 3px; overflow: hidden; background: color-mix(in srgb, var(--color-bg) 26%, transparent); transition: background .2s ease; }
+.wf-dot:hover > span { background: color-mix(in srgb, var(--color-bg) 48%, transparent); }
+.wf-dot > span > i { position: absolute; inset: 0; display: block; transform: scaleX(0); transform-origin: left; background: var(--color-accent-300); box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-300) 70%, transparent); }
+.wf-dot[aria-current="true"] > span > i { animation: wf-dotfill 6s linear forwards; }
+@keyframes wf-dotfill { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+@media (prefers-reduced-motion: reduce) { .wf-dot[aria-current="true"] > span > i { animation: none !important; transform: scaleX(1) !important; } }
 .wf-armed { opacity: 0; transform: translateY(26px); }
 .wf-armed.wf-in { opacity: 1; transform: none; transition: opacity .8s cubic-bezier(.22,.61,.36,1), transform .8s cubic-bezier(.22,.61,.36,1); }
 [data-reveal] > * { opacity: 0; transform: translateY(24px); }
@@ -549,18 +566,23 @@ a:hover { color: var(--color-accent-200); }
   <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(120% 90% at 50% 8%, transparent 40%, rgba(10,17,24,.55) 100%)"></div>
 
   <div style="position:relative; z-index:10; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:clamp(96px,10vw,128px) clamp(20px,5vw,48px) clamp(40px,6vw,64px)">
-    <span class="wf-riser d1" style="display:inline-flex; align-items:center; gap:9px; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; font-weight:600; color:var(--color-accent-200); border:1px solid color-mix(in srgb, var(--color-accent-200) 38%, transparent); padding:7px 14px; margin-bottom:clamp(22px,3vw,34px)">
-      <span style="width:7px; height:7px; background:var(--color-accent-300); display:inline-block; animation:wf-blink 1.8s ease-in-out infinite"></span>
-      Fibra propia · Melipilla
-    </span>
-    <h1 class="wf-heroh1" style="font-family:var(--font-heading); font-weight:600; font-size:clamp(46px,9.2vw,132px); line-height:0.92; letter-spacing:0.005em; text-transform:uppercase; margin:0; color:var(--color-bg)">
-      <span class="wf-ln"><span>Internet + TV</span></span>
-      <span class="wf-ln"><span>de fibra</span></span>
-      <span class="wf-ln" style="color:var(--color-accent-300)"><span>en Melipilla</span></span>
-    </h1>
-    <p class="wf-riser d2" style="font-size:clamp(16px,1.7vw,20px); line-height:1.6; max-width:52ch; margin:clamp(24px,3vw,34px) 0 0; color:color-mix(in srgb, var(--color-bg) 76%, transparent)">
-      Banda ancha simétrica y televisión sobre fibra propia, de nuestra OLT a tu casa. Verifica si la red ya llegó a tu dirección.
-    </p>
+    <!-- Carrusel de promociones · las diapositivas las genera el script desde promotionsData.
+         Lo de abajo es solo el respaldo que se ve si el JavaScript no carga. -->
+    <div id="wf-hero-slider" class="wf-riser d1" style="width:100%" role="region" aria-roledescription="carrusel" aria-label="Promociones destacadas">
+      <div class="wf-slides">
+        <div class="wf-slide is-active">
+          <span class="wf-hero-badge"><i></i>Fibra propia · Melipilla</span>
+          <h1 class="wf-heroh1">
+            <span class="wf-ln"><span>Internet + TV</span></span>
+            <span class="wf-ln"><span>de fibra</span></span>
+            <span class="wf-ln" style="color:var(--color-accent-300)"><span>en Melipilla</span></span>
+          </h1>
+          <p class="wf-hero-sub">Banda ancha simétrica y televisión sobre fibra propia, de nuestra OLT a tu casa. Verifica si la red ya llegó a tu dirección.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="wf-hero-dots" class="wf-dots wf-riser d2" role="group" aria-label="Elegir promoción"></div>
 
     <div id="cobertura" class="wf-riser d3" style="width:min(580px, 100%); margin-top:clamp(30px,4vw,44px); scroll-margin-top:90px">
       <div class="wf-checkwrap" style="display:flex; align-items:stretch; border:1px solid color-mix(in srgb, var(--color-bg) 34%, transparent); background:color-mix(in srgb, #000 24%, transparent); backdrop-filter:blur(6px); transition:border-color .2s ease, box-shadow .2s ease">
@@ -1256,6 +1278,157 @@ a:hover { color: var(--color-accent-200); }
       requestAnimationFrame(loop);
     })();
   })();
+})();
+</script>
+
+<script>
+/* ==========================================================================
+   HERO · Carrusel de promociones
+   --------------------------------------------------------------------------
+   PARA EDITAR LAS OFERTAS: cambia solo el arreglo promotionsData de abajo.
+   Cada promoción tiene:
+     badge  → texto del recuadro superior (en mayúsculas automáticas)
+     titulo → arreglo de líneas del titular. Una línea por elemento.
+     acento → índice de la línea que va en azul (0 = la primera). -1 = ninguna.
+     texto  → subtítulo descriptivo.
+   Puedes agregar o quitar promociones libremente: los puntos de navegación
+   y el tiempo de rotación se ajustan solos.
+   ========================================================================== */
+(function () {
+  var promotionsData = [
+    {
+      badge: 'Fibra propia · Melipilla',
+      titulo: ['Internet + TV', 'de fibra', 'en Melipilla'],
+      acento: 2,
+      texto: 'Banda ancha simétrica y televisión sobre fibra propia, de nuestra OLT a tu casa. Verifica si la red ya llegó a tu dirección.'
+    },
+    {
+      badge: 'Promo lanzamiento',
+      titulo: ['940 Mbps', 'sin permanencia'],
+      acento: 1,
+      texto: 'Plan Full simétrico con router Wi-Fi 6 en comodato. Precio mes a mes, sin alza silenciosa al sexto mes.'
+    },
+    {
+      badge: 'Plan dúo fibra',
+      titulo: ['Internet y TV', 'en la misma fibra'],
+      acento: 1,
+      texto: 'Televisión sobre la misma fibra que tu internet: sin cable coaxial, sin enlaces compartidos con el vecino.'
+    },
+    {
+      badge: 'Mígrate hoy',
+      titulo: ['Cambiarte', 'toma 48 horas'],
+      acento: 1,
+      texto: 'Instalación con velocidad, latencia y potencia óptica medidas y firmadas en el acta. Soporte local en Melipilla.'
+    }
+  ];
+
+  var slider = document.getElementById('wf-hero-slider');
+  var dotsWrap = document.getElementById('wf-hero-dots');
+  if (!slider || !dotsWrap) return;
+  var track = slider.querySelector('.wf-slides');
+  if (!track || !promotionsData.length) return;
+
+  var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var slides = [], dots = [], index = 0, pauses = {};
+
+  function reduced() { return mqReduce.matches; }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  /* --- Construir diapositivas y puntos desde promotionsData --- */
+  track.innerHTML = '';
+  dotsWrap.innerHTML = '';
+  promotionsData.forEach(function (p, i) {
+    var first = i === 0;
+
+    var lines = (p.titulo || []).map(function (t, li) {
+      var col = (li === p.acento) ? ' style="color:var(--color-accent-300)"' : '';
+      return '<span class="wf-ln"' + col + '><span>' + esc(t) + '</span></span>';
+    }).join('');
+
+    var slide = document.createElement('div');
+    slide.className = 'wf-slide' + (first ? ' is-active' : '');
+    slide.setAttribute('aria-hidden', first ? 'false' : 'true');
+    slide.innerHTML =
+      '<span class="wf-hero-badge"><i></i>' + esc(p.badge) + '</span>' +
+      '<h1 class="wf-heroh1">' + lines + '</h1>' +
+      '<p class="wf-hero-sub">' + esc(p.texto) + '</p>';
+    track.appendChild(slide);
+    slides.push(slide);
+
+    var dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'wf-dot';
+    dot.setAttribute('aria-current', first ? 'true' : 'false');
+    dot.setAttribute('aria-label', 'Promoción ' + (i + 1) + ' de ' + promotionsData.length + ': ' + p.badge);
+    dot.innerHTML = '<span><i></i></span>';
+    dot.addEventListener('click', function () { go(i); });
+    dotsWrap.appendChild(dot);
+    dots.push(dot);
+  });
+
+  /* Con una sola promoción no tiene sentido mostrar navegación */
+  if (slides.length < 2) { dotsWrap.hidden = true; return; }
+
+  function fill() { return dots[index].querySelector('i'); }
+
+  function applyPause() {
+    var f = fill();
+    if (!f) return;
+    var stop = reduced() || Object.keys(pauses).length > 0;
+    f.style.animationPlayState = stop ? 'paused' : 'running';
+  }
+
+  function setPause(key, on) {
+    if (on) { pauses[key] = 1; } else { delete pauses[key]; }
+    applyPause();
+  }
+
+  function go(i) {
+    i = ((i % slides.length) + slides.length) % slides.length;
+    if (i === index) return;
+    slides[index].classList.remove('is-active');
+    slides[index].setAttribute('aria-hidden', 'true');
+    dots[index].setAttribute('aria-current', 'false');
+    index = i;
+    slides[index].classList.add('is-active');
+    slides[index].setAttribute('aria-hidden', 'false');
+    dots[index].setAttribute('aria-current', 'true');
+    // Reiniciar la barra de progreso del punto activo
+    var f = fill();
+    if (f) { f.style.animation = 'none'; void f.offsetWidth; f.style.animation = ''; }
+    applyPause();
+  }
+
+  /* --- Autoplay: lo dispara el fin de la barra de progreso, así el punto
+         y el cambio de diapositiva nunca se desincronizan --- */
+  dotsWrap.addEventListener('animationend', function (e) {
+    if (e.animationName === 'wf-dotfill' && !reduced()) go(index + 1);
+  });
+
+  /* --- Pausas --- */
+  [slider, dotsWrap].forEach(function (el) {
+    el.addEventListener('pointerenter', function () { setPause('hover', true); });
+    el.addEventListener('pointerleave', function () { setPause('hover', false); });
+    el.addEventListener('focusin', function () { setPause('foco', true); });
+    el.addEventListener('focusout', function () { setPause('foco', false); });
+  });
+  document.addEventListener('visibilitychange', function () { setPause('oculto', document.hidden); });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      setPause('fuera', !entries[0].isIntersecting);
+    }, { threshold: 0.15 }).observe(slider);
+  }
+  if (mqReduce.addEventListener) mqReduce.addEventListener('change', applyPause);
+
+  /* --- Teclado: flechas sobre los puntos --- */
+  dotsWrap.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    e.preventDefault();
+    go(index + (e.key === 'ArrowRight' ? 1 : -1));
+    dots[index].focus();
+  });
+
+  applyPause();
 })();
 </script>
 </body>
