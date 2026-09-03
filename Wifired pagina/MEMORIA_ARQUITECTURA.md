@@ -124,6 +124,42 @@ Atributos que controlan el medidor (en el `<span>` del número):
   alto no se aplican y el pin queda invisible (ya pasó una vez).
 - Si mueves el pin, cambia `SUCURSAL` **y** el enlace "Ver mapa completo".
 
+### Jerarquía de capas (z-index) — NO romper
+
+| Capa | z-index | Dónde |
+|------|---------|-------|
+| Barra de progreso | 1001 | `#wf-progress` |
+| Navegación | 1000 | `<nav>` (estilo en línea) |
+| Botón WhatsApp | 55 | `#wf-fab` |
+| Mapa | **0** | `#wf-map` con `isolation: isolate` |
+
+- **El bug que se corrigió:** el `<nav>` tenía z-index 50, pero Leaflet pone sus
+  controles en **z-index 1000**, así que el mapa se montaba sobre la barra.
+- **La solución de fondo es `isolation: isolate` en `#wf-map`**: crea un contexto
+  de apilamiento propio, así nada de adentro puede treparse afuera, sin importar
+  el z-index que Leaflet use internamente.
+- `#wf-map .leaflet-top, .leaflet-bottom { z-index: 10 }` baja los controles.
+- **NO bajar los z-index de cada `.leaflet-*-pane` por separado.** Leaflet los usa
+  para apilar sus capas (tiles 200 < marcador 600). Aplanarlos esconde el pin.
+- Verificado con `elementFromPoint`: con el mapa solapando la barra, al frente
+  queda un enlace de la navegación, no el mapa.
+
+### Botón "Ver mapa completo"
+
+- Clase `.wf-maplink`. Apunta a la ficha oficial de Google Maps por CID:
+  `https://www.google.com/maps?cid=16146747442751394680`
+- `target="_blank"` + `rel="noopener noreferrer"` → abre pestaña nueva sin
+  recargar ni afectar la landing.
+- Icono SVG de enlace externo + resplandor cian al pasar el cursor.
+- Incluye texto `.wf-sr` ("se abre en una pestaña nueva") para lectores de
+  pantalla. `.wf-sr` es la clase de texto invisible pero anunciado.
+- **Las coordenadas del pin se cambiaron** de `-33.6889, -71.2153` a
+  `-33.688519, -71.216891` (las de la ficha oficial). Estaban a unos 150 m de
+  distancia, así que el pin y el botón apuntaban a puntos distintos.
+- **No se usó el iframe de Google Maps** (era opcional en el pedido): con iframe
+  se pierde el pin neón personalizado, porque no se puede dibujar encima de un
+  iframe de terceros. Se mantuvo Leaflet + Esri Dark, que ya funcionaba.
+
 ## Hero · Split con carrusel de banners promocionales
 
 **DÓNDE EDITAR LAS OFERTAS:** `index.html` → último `<script>` del archivo →
