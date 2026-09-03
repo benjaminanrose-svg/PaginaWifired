@@ -470,7 +470,7 @@ a:hover { color: var(--color-accent-200); }
 @keyframes wf-bob { 0%,100% { transform: translateY(0); opacity: .5 } 50% { transform: translateY(7px); opacity: 1 } }
 @keyframes wf-lineup { from { transform: translateY(110%) } to { transform: translateY(0) } }
 @keyframes wf-rise { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: none } }
-.wf-heroh1 { font-family: var(--font-heading); font-weight: 600; font-size: clamp(46px,9.2vw,132px); line-height: .92; letter-spacing: .005em; text-transform: uppercase; margin: 0; color: var(--color-bg); }
+.wf-heroh1 { font-family: var(--font-heading); font-weight: 600; font-size: clamp(34px,5.6vw,62px); line-height: .98; letter-spacing: .005em; text-transform: uppercase; margin: 0; color: var(--color-bg); text-wrap: balance; }
 .wf-heroh1 .wf-ln { display: block; overflow: hidden; padding-bottom: .04em; }
 .wf-heroh1 .wf-ln > span { display: block; transform: translateY(110%); animation: wf-lineup 1s cubic-bezier(.16,1,.3,1) both; }
 .wf-heroh1 .wf-ln:nth-child(1) > span { animation-delay: .12s }
@@ -490,20 +490,40 @@ a:hover { color: var(--color-accent-200); }
 .wf-pin i + i { animation-delay: 1.4s; }
 @keyframes wf-pinpulse { 0% { transform: scale(1); opacity: .75 } 100% { transform: scale(3.6); opacity: 0 } }
 @media (prefers-reduced-motion: reduce) { .wf-pin i { animation: none !important; opacity: .3 !important; } }
-/* --- Hero · carrusel de promociones (contenido en promotionsData, ver script al final) --- */
+/* --- Hero split · texto + buscador a la izquierda, banner promocional a la derecha.
+       El contenido sale de promotionsList (ver script al final del archivo). --- */
+.wf-hero-grid { width: 100%; max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: clamp(28px,4vw,56px); align-items: center; }
+.wf-hero-left { display: flex; flex-direction: column; align-items: center; min-width: 0; width: 100%; }
+.wf-hero-right { order: -1; min-width: 0; width: 100%; } /* en móvil la imagen va arriba */
+@media (min-width: 980px) {
+  .wf-hero-grid { grid-template-columns: minmax(0,1.05fr) minmax(0,.95fr); text-align: left; }
+  .wf-hero-right { order: 0; }
+  .wf-hero-left, .wf-slide { align-items: flex-start; }
+  .wf-hero-sub { margin-left: 0; margin-right: 0; }
+}
 .wf-slides { display: grid; width: 100%; }
 .wf-slide { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s ease; }
 .wf-slide.is-active { opacity: 1; visibility: visible; }
-.wf-hero-badge { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; color: var(--color-accent-200); border: 1px solid color-mix(in srgb, var(--color-accent-200) 38%, transparent); padding: 7px 14px; margin-bottom: clamp(22px,3vw,34px); }
+.wf-hero-badge { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; color: var(--color-accent-200); border: 1px solid color-mix(in srgb, var(--color-accent-200) 38%, transparent); padding: 7px 14px; margin-bottom: clamp(18px,2.4vw,26px); }
 .wf-hero-badge > i { width: 7px; height: 7px; background: var(--color-accent-300); display: inline-block; animation: wf-blink 1.8s ease-in-out infinite; }
-.wf-hero-sub { font-size: clamp(16px,1.7vw,20px); line-height: 1.6; max-width: 52ch; margin: clamp(24px,3vw,34px) 0 0; color: color-mix(in srgb, var(--color-bg) 76%, transparent); }
-.wf-dots { display: flex; gap: 10px; justify-content: center; margin-top: clamp(26px,3.4vw,38px); }
+.wf-hero-sub { font-size: clamp(15.5px,1.5vw,18.5px); line-height: 1.6; max-width: 46ch; margin: clamp(18px,2.4vw,26px) auto 0; color: color-mix(in srgb, var(--color-bg) 76%, transparent); }
+/* Tarjeta del banner promocional */
+.wf-promo-card { position: relative; margin: 0; border-radius: 16px; overflow: hidden; background: #0d1520; border: 1px solid rgba(255,255,255,.10); box-shadow: 0 18px 50px -12px rgba(0,0,0,.72), 0 0 34px -6px color-mix(in srgb, var(--color-accent-300) 22%, transparent); }
+.wf-promo-media { position: relative; display: grid; width: 100%; aspect-ratio: 4 / 3; background: #0d1520; }
+@media (min-width: 980px) { .wf-promo-media { aspect-ratio: 5 / 4; } }
+.wf-promo-img { grid-area: 1 / 1; width: 100%; height: 100%; object-fit: cover; opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s ease; }
+.wf-promo-img.is-active { opacity: 1; visibility: visible; }
+/* Velo para que los puntos y el marco se lean sobre cualquier foto */
+.wf-promo-card::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to top, rgba(10,17,24,.88) 0%, rgba(10,17,24,.10) 46%, rgba(10,17,24,.30) 100%); }
+/* Puntos (bullets) en la base de la tarjeta */
+.wf-dots { position: absolute; z-index: 2; left: 0; right: 0; bottom: 16px; display: flex; gap: 9px; justify-content: center; }
 .wf-dots[hidden] { display: none !important; }
-.wf-dot { width: 34px; height: 28px; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: center; }
-.wf-dot > span { position: relative; display: block; width: 100%; height: 3px; overflow: hidden; background: color-mix(in srgb, var(--color-bg) 26%, transparent); transition: background .2s ease; }
-.wf-dot:hover > span { background: color-mix(in srgb, var(--color-bg) 48%, transparent); }
-.wf-dot > span > i { position: absolute; inset: 0; display: block; transform: scaleX(0); transform-origin: left; background: var(--color-accent-300); box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-300) 70%, transparent); }
-.wf-dot[aria-current="true"] > span > i { animation: wf-dotfill 6s linear forwards; }
+.wf-dot { height: 22px; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: center; }
+.wf-dot > span { position: relative; display: block; width: 9px; height: 9px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.34); transition: width .45s cubic-bezier(.22,.61,.36,1), background .3s ease; }
+.wf-dot:hover > span { background: rgba(255,255,255,.6); }
+.wf-dot[aria-current="true"] > span { width: 30px; background: rgba(255,255,255,.22); }
+.wf-dot > span > i { position: absolute; inset: 0; display: block; border-radius: 999px; transform: scaleX(0); transform-origin: left; background: var(--color-accent-300); box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent-300) 85%, transparent); }
+.wf-dot[aria-current="true"] > span > i { animation: wf-dotfill 5s linear forwards; }
 @keyframes wf-dotfill { from { transform: scaleX(0) } to { transform: scaleX(1) } }
 @media (prefers-reduced-motion: reduce) { .wf-dot[aria-current="true"] > span > i { animation: none !important; transform: scaleX(1) !important; } }
 .wf-armed { opacity: 0; transform: translateY(26px); }
@@ -580,25 +600,23 @@ a:hover { color: var(--color-accent-200); }
   <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(120% 90% at 50% 8%, transparent 40%, rgba(10,17,24,.55) 100%)"></div>
 
   <div style="position:relative; z-index:10; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:clamp(96px,10vw,128px) clamp(20px,5vw,48px) clamp(40px,6vw,64px)">
-    <!-- Carrusel de promociones · las diapositivas las genera el script desde promotionsData.
-         Lo de abajo es solo el respaldo que se ve si el JavaScript no carga. -->
+    <!-- Hero en 2 columnas. El texto y las imágenes los genera el script desde
+         promotionsList. Lo escrito abajo es el respaldo si el JavaScript no carga.
+         El buscador de cobertura NO rota: queda fijo y visible siempre. -->
+    <div class="wf-hero-grid">
+
+    <div class="wf-hero-left">
     <div id="wf-hero-slider" class="wf-riser d1" style="width:100%" role="region" aria-roledescription="carrusel" aria-label="Promociones destacadas">
       <div class="wf-slides">
         <div class="wf-slide is-active">
-          <span class="wf-hero-badge"><i></i>Fibra propia · Melipilla</span>
-          <h1 class="wf-heroh1">
-            <span class="wf-ln"><span>Internet + TV</span></span>
-            <span class="wf-ln"><span>de fibra</span></span>
-            <span class="wf-ln" style="color:var(--color-accent-300)"><span>en Melipilla</span></span>
-          </h1>
-          <p class="wf-hero-sub">Banda ancha simétrica y televisión sobre fibra propia, de nuestra OLT a tu casa. Verifica si la red ya llegó a tu dirección.</p>
+          <span class="wf-hero-badge"><i></i>Promo Internet + TV</span>
+          <h1 class="wf-heroh1">Internet + TV de fibra <span style="color:var(--color-accent-300)">en Melipilla</span></h1>
+          <p class="wf-hero-sub">Banda ancha simétrica y televisión HD para tu hogar.</p>
         </div>
       </div>
     </div>
 
-    <div id="wf-hero-dots" class="wf-dots wf-riser d2" role="group" aria-label="Elegir promoción"></div>
-
-    <div id="cobertura" class="wf-riser d3" style="width:min(580px, 100%); margin-top:clamp(30px,4vw,44px); scroll-margin-top:90px">
+    <div id="cobertura" class="wf-riser d3" style="width:min(580px, 100%); margin-top:clamp(26px,3.4vw,38px); scroll-margin-top:90px">
       <div class="wf-checkwrap" style="display:flex; align-items:stretch; border:1px solid color-mix(in srgb, var(--color-bg) 34%, transparent); background:color-mix(in srgb, #000 24%, transparent); backdrop-filter:blur(6px); transition:border-color .2s ease, box-shadow .2s ease">
         <span aria-hidden="true" style="display:flex; align-items:center; padding-left:16px; color:var(--color-accent-300)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -621,6 +639,18 @@ a:hover { color: var(--color-accent-200); }
         </div>
       </div>
     </div>
+    </div><!-- /.wf-hero-left -->
+
+    <div class="wf-hero-right wf-riser d2">
+      <figure class="wf-promo-card">
+        <div class="wf-promo-media">
+          <img class="wf-promo-img is-active" src="https://images.unsplash.com/photo-1593784991095-a205069470b6?q=80&amp;w=1000&amp;auto=format&amp;fit=crop" alt="Promo Internet y TV" decoding="async" fetchpriority="high">
+        </div>
+        <div id="wf-hero-dots" class="wf-dots" role="group" aria-label="Elegir promoción"></div>
+      </figure>
+    </div>
+
+    </div><!-- /.wf-hero-grid -->
   </div>
 
   <div style="position:relative; z-index:10; border-top:1px solid color-mix(in srgb, var(--color-bg) 14%, transparent); background:rgba(0,0,0,.16)">
@@ -1329,40 +1359,48 @@ a:hover { color: var(--color-accent-200); }
 /* ==========================================================================
    HERO · Carrusel de promociones
    --------------------------------------------------------------------------
-   PARA EDITAR LAS OFERTAS: cambia solo el arreglo promotionsData de abajo.
+   PARA EDITAR LAS OFERTAS: cambia solo el arreglo promotionsList de abajo.
    Cada promoción tiene:
-     badge  → texto del recuadro superior (en mayúsculas automáticas)
-     titulo → arreglo de líneas del titular. Una línea por elemento.
-     acento → índice de la línea que va en azul (0 = la primera). -1 = ninguna.
-     texto  → subtítulo descriptivo.
+     id          → número identificador
+     badge       → texto del recuadro superior (se muestra en mayúsculas)
+     title       → titular principal
+     accent      → (opcional) trozo exacto del title que va en azul neón
+     description → texto breve bajo el titular
+     imageUrl    → foto del banner de la derecha
+     alt         → descripción de la foto para lectores de pantalla
    Puedes agregar o quitar promociones libremente: los puntos de navegación
    y el tiempo de rotación se ajustan solos.
    ========================================================================== */
 (function () {
-  var promotionsData = [
+  var promotionsList = [
     {
-      badge: 'Fibra propia · Melipilla',
-      titulo: ['Internet + TV', 'de fibra', 'en Melipilla'],
-      acento: 2,
-      texto: 'Banda ancha simétrica y televisión sobre fibra propia, de nuestra OLT a tu casa. Verifica si la red ya llegó a tu dirección.'
+      id: 1,
+      badge: 'Promo Internet + TV',
+      title: 'Internet + TV de fibra en Melipilla',
+      accent: 'en Melipilla',
+      description: 'Banda ancha simétrica y televisión HD para tu hogar.',
+      imageUrl: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?q=80&w=1000&auto=format&fit=crop',
+      alt: 'Promo Internet y TV'
     },
     {
-      badge: 'Promo lanzamiento',
-      titulo: ['940 Mbps', 'sin permanencia'],
-      acento: 1,
-      texto: 'Plan Full simétrico con router Wi-Fi 6 en comodato. Precio mes a mes, sin alza silenciosa al sexto mes.'
+      id: 2,
+      badge: 'Fibra de alta velocidad',
+      title: '940 Mbps simétricos sin permanencia',
+      accent: 'sin permanencia',
+      description: 'Plan Full con router Wi-Fi 6 en comodato. Precio mes a mes.',
+      imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop',
+      alt: 'Experiencia digital y gaming con fibra de alta velocidad'
     },
     {
-      badge: 'Plan dúo fibra',
-      titulo: ['Internet y TV', 'en la misma fibra'],
-      acento: 1,
-      texto: 'Televisión sobre la misma fibra que tu internet: sin cable coaxial, sin enlaces compartidos con el vecino.'
-    },
-    {
-      badge: 'Mígrate hoy',
-      titulo: ['Cambiarte', 'toma 48 horas'],
-      acento: 1,
-      texto: 'Instalación con velocidad, latencia y potencia óptica medidas y firmadas en el acta. Soporte local en Melipilla.'
+      id: 3,
+      badge: 'Deportes en vivo',
+      title: 'Ve el partido sin cortes ni pixeleo',
+      accent: 'sin cortes ni pixeleo',
+      description: 'Televisión sobre la misma fibra: nada de enlaces compartidos.',
+      // La foto que venía en el brief (photo-1508098682722…) daba 404 en Unsplash.
+      // Reemplazada por un estadio de fútbol lleno, verificado que carga.
+      imageUrl: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1000&auto=format&fit=crop',
+      alt: 'Estadio de fútbol lleno durante un partido en vivo'
     }
   ];
 
@@ -1370,40 +1408,61 @@ a:hover { color: var(--color-accent-200); }
   var dotsWrap = document.getElementById('wf-hero-dots');
   if (!slider || !dotsWrap) return;
   var track = slider.querySelector('.wf-slides');
-  if (!track || !promotionsData.length) return;
+  var media = document.querySelector('.wf-promo-media');
+  if (!track || !media || !promotionsList.length) return;
 
   var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var slides = [], dots = [], index = 0, pauses = {};
+  var slides = [], imgs = [], dots = [], index = 0, pauses = {};
 
   function reduced() { return mqReduce.matches; }
   function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-  /* --- Construir diapositivas y puntos desde promotionsData --- */
-  track.innerHTML = '';
-  dotsWrap.innerHTML = '';
-  promotionsData.forEach(function (p, i) {
-    var first = i === 0;
+  /* Pinta en azul el trozo indicado en accent, sobre el texto ya escapado */
+  function tituloHTML(p) {
+    var t = esc(p.title || '');
+    if (p.accent) {
+      var a = esc(p.accent);
+      if (t.indexOf(a) !== -1) {
+        t = t.replace(a, '<span style="color:var(--color-accent-300)">' + a + '</span>');
+      }
+    }
+    return t;
+  }
 
-    var lines = (p.titulo || []).map(function (t, li) {
-      var col = (li === p.acento) ? ' style="color:var(--color-accent-300)"' : '';
-      return '<span class="wf-ln"' + col + '><span>' + esc(t) + '</span></span>';
-    }).join('');
+  /* --- Construir textos, imágenes y puntos desde promotionsList --- */
+  track.innerHTML = '';
+  media.innerHTML = '';
+  dotsWrap.innerHTML = '';
+  promotionsList.forEach(function (p, i) {
+    var first = i === 0;
 
     var slide = document.createElement('div');
     slide.className = 'wf-slide' + (first ? ' is-active' : '');
     slide.setAttribute('aria-hidden', first ? 'false' : 'true');
     slide.innerHTML =
       '<span class="wf-hero-badge"><i></i>' + esc(p.badge) + '</span>' +
-      '<h1 class="wf-heroh1">' + lines + '</h1>' +
-      '<p class="wf-hero-sub">' + esc(p.texto) + '</p>';
+      '<h1 class="wf-heroh1">' + tituloHTML(p) + '</h1>' +
+      '<p class="wf-hero-sub">' + esc(p.description) + '</p>';
     track.appendChild(slide);
     slides.push(slide);
+
+    // La 1ª imagen se carga de inmediato porque se ve al entrar (mejora el LCP).
+    // El resto van diferidas para no gastar datos de quien nunca las verá.
+    var img = document.createElement('img');
+    img.className = 'wf-promo-img' + (first ? ' is-active' : '');
+    img.src = p.imageUrl;
+    img.alt = p.alt || '';
+    img.decoding = 'async';
+    if (first) { img.setAttribute('fetchpriority', 'high'); }
+    else { img.loading = 'lazy'; }
+    media.appendChild(img);
+    imgs.push(img);
 
     var dot = document.createElement('button');
     dot.type = 'button';
     dot.className = 'wf-dot';
     dot.setAttribute('aria-current', first ? 'true' : 'false');
-    dot.setAttribute('aria-label', 'Promoción ' + (i + 1) + ' de ' + promotionsData.length + ': ' + p.badge);
+    dot.setAttribute('aria-label', 'Promoción ' + (i + 1) + ' de ' + promotionsList.length + ': ' + p.badge);
     dot.innerHTML = '<span><i></i></span>';
     dot.addEventListener('click', function () { go(i); });
     dotsWrap.appendChild(dot);
@@ -1432,14 +1491,16 @@ a:hover { color: var(--color-accent-200); }
     if (i === index) return;
     slides[index].classList.remove('is-active');
     slides[index].setAttribute('aria-hidden', 'true');
+    imgs[index].classList.remove('is-active');
     dots[index].setAttribute('aria-current', 'false');
     index = i;
     slides[index].classList.add('is-active');
     slides[index].setAttribute('aria-hidden', 'false');
+    imgs[index].classList.add('is-active');
     dots[index].setAttribute('aria-current', 'true');
-    // Reiniciar la barra de progreso del punto activo
-    var f = fill();
-    if (f) { f.style.animation = 'none'; void f.offsetWidth; f.style.animation = ''; }
+    // No hace falta reiniciar a mano: al cambiar aria-current, el CSS aplica una
+    // animación nueva desde cero en el punto activo. Forzar un reflow aquí solo
+    // agregaba un fotograma de retraso al ciclo.
     applyPause();
   }
 
@@ -1450,7 +1511,9 @@ a:hover { color: var(--color-accent-200); }
   });
 
   /* --- Pausas --- */
-  [slider, dotsWrap].forEach(function (el) {
+  var card = document.querySelector('.wf-promo-card');
+  [slider, dotsWrap, card].forEach(function (el) {
+    if (!el) return;
     el.addEventListener('pointerenter', function () { setPause('hover', true); });
     el.addEventListener('pointerleave', function () { setPause('hover', false); });
     el.addEventListener('focusin', function () { setPause('foco', true); });

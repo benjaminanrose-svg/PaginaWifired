@@ -56,42 +56,68 @@
   alto no se aplican y el pin queda invisible (ya pasó una vez).
 - Si mueves el pin, cambia `SUCURSAL` **y** el enlace "Ver mapa completo".
 
-## Hero · Carrusel de promociones
+## Hero · Split con carrusel de banners promocionales
 
 **DÓNDE EDITAR LAS OFERTAS:** `index.html` → último `<script>` del archivo →
-arreglo **`promotionsData`**. Es el único lugar a tocar para cambiar promos.
-
-Cada promoción tiene 4 campos:
+arreglo **`promotionsList`**. Es el único lugar a tocar para cambiar promos.
 
 | Campo | Qué es |
 |-------|--------|
-| `badge` | Texto del recuadro superior (ej: "Promo lanzamiento") |
-| `titulo` | Arreglo de líneas del titular. Una línea por elemento |
-| `acento` | Índice de la línea que va en azul (0 = primera). `-1` = ninguna |
-| `texto` | Subtítulo descriptivo |
+| `id` | Número identificador |
+| `badge` | Texto del recuadro superior |
+| `title` | Titular principal |
+| `accent` | *(opcional)* trozo exacto del `title` que va en azul neón |
+| `description` | Texto breve bajo el titular |
+| `imageUrl` | Foto del banner de la derecha |
+| `alt` | Descripción de la foto para lectores de pantalla |
 
-Agregar o quitar promociones ajusta solo los puntos y la rotación.
+Agregar o quitar promociones ajusta solo los bullets y la rotación.
 
-| Elemento | ID / Clase | Función |
+### Estructura del layout
+
+| Elemento | Clase / ID | Función |
 |----------|-----------|---------|
-| Contenedor carrusel | `#wf-hero-slider` | Envuelve las diapositivas |
-| Pista | `.wf-slides` | Grid que apila todas las slides en la misma celda |
-| Diapositiva | `.wf-slide` / `.is-active` | Fade 500ms; solo la activa es visible |
-| Puntos | `#wf-hero-dots` / `.wf-dot` | Barras finas sobre el buscador |
-| Barra progreso | `@keyframes wf-dotfill` | 6s lineal; su fin dispara el cambio |
+| Rejilla | `.wf-hero-grid` | 1 columna en móvil, 2 desde 980px |
+| Columna izq. | `.wf-hero-left` | Texto rotativo + buscador **fijo** |
+| Columna der. | `.wf-hero-right` | Tarjeta del banner. `order:-1` en móvil |
+| Tarjeta | `.wf-promo-card` | Radio 16px, borde `rgba(255,255,255,.10)`, sombra neón |
+| Marco imagen | `.wf-promo-media` | `aspect-ratio` fijo (4/3 móvil, 5/4 escritorio) |
+| Imágenes | `.wf-promo-img` / `.is-active` | Fundido 500ms |
+| Textos | `.wf-slides` / `.wf-slide` | Grid apilado en celda `1/1` |
+| Bullets | `#wf-hero-dots` / `.wf-dot` | Dentro de la tarjeta, abajo |
+| Progreso | `@keyframes wf-dotfill` | **5s** lineal; su fin dispara el cambio |
 
-- **Autoplay:** 6s. No usa temporizador: lo dispara el `animationend` de la barra
-  del punto activo, así el indicador y la diapositiva nunca se desincronizan.
-- **Pausas** (se acumulan, se reanuda cuando no queda ninguna): cursor encima,
-  foco dentro, pestaña oculta, hero fuera de pantalla.
-- **Teclado:** flechas ← → sobre los puntos.
-- **Movimiento reducido:** sin autoplay, sin fade; los puntos siguen funcionando.
-- **Sin salto de maquetación:** todas las slides comparten la celda `1 / 1` del
-  grid, así la altura es la de la más alta y nada se mueve al cambiar.
-- **NO SE TOCA:** `#cobertura` (buscador) ni las métricas del pie son parte del
-  carrusel; quedan fijas. Verificado que el buscador sigue funcionando igual.
-- El HTML trae la 1ª diapositiva escrita como **respaldo si el JS no carga**;
-  al iniciar, el script reconstruye todo desde `promotionsData`.
+- **Móvil:** imagen arriba, luego titular y descripción, buscador abajo.
+- **Autoplay 5s.** No usa temporizador: lo dispara el `animationend` del bullet
+  activo, así bullet, texto e imagen nunca se desincronizan.
+- **OJO — no reiniciar la animación a mano en `go()`.** Al cambiar
+  `aria-current`, el CSS ya aplica una animación nueva desde cero. El truco de
+  `style.animation='none'` + reflow que había antes agregaba ~1s por ciclo
+  (medido: 6s en vez de 5s). Se quitó.
+- **Imágenes:** la 1ª va `fetchpriority="high"` porque se ve al entrar (mejora
+  el LCP); las demás van `loading="lazy"`. El `aspect-ratio` fijo evita que la
+  página salte mientras cargan.
+- **Pausas** (se acumulan): cursor sobre el texto o la tarjeta, foco dentro,
+  pestaña oculta, hero fuera de pantalla.
+- **Teclado:** flechas ← → sobre los bullets.
+- **Sin salto de maquetación:** textos e imágenes comparten celda de grid, así
+  la altura es la de la más alta. **Verificado: el buscador no se mueve (0 px)
+  al cambiar de promo.**
+- **NO SE TOCA:** `#cobertura` y las métricas del pie quedan fijas y fuera del
+  carrusel. Verificado que el buscador sigue funcionando igual.
+- El HTML trae la 1ª promo escrita como **respaldo si el JS no carga**.
+
+### Fotos (Unsplash)
+
+| Promo | Foto |
+|-------|------|
+| 1 · Internet + TV | `photo-1593784991095-a205069470b6` |
+| 2 · Alta velocidad | `photo-1542751371-adc38448a05e` |
+| 3 · Deportes | `photo-1522778119026-d647f0596c20` |
+
+- **La foto de deportes del brief original (`photo-1508098682722-e99c43a406b2`)
+  daba 404 en Unsplash.** Se reemplazó por un estadio de fútbol verificado.
+  Si agregas fotos nuevas, comprueba que la URL responda 200 antes de subirla.
 
 ## Animaciones del esquema de red (WF-NODO-01)
 
