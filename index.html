@@ -462,7 +462,31 @@ a:hover { color: var(--color-accent-200); }
 .wf-topbar a { color: inherit; text-decoration: none; transition: color .2s ease; }
 .wf-topbar a:hover, .wf-topbar a:focus-visible { color: var(--color-accent-300); }
 .wf-topbar-dot { width: 6px; height: 6px; flex: none; border-radius: 50%; background: #34d399; display: inline-block; margin-right: 7px; vertical-align: middle; }
-@media (max-width: 900px) { .wf-topbar-l { display: none; } .wf-topbar { justify-content: flex-end; } }
+@media (max-width: 900px) { .wf-topbar-l { display: none; } }
+/* Selector Hogar | Empresas · divide la barra superior en dos */
+.wf-segs { display: flex; align-items: stretch; flex: none; margin: -7px 0; align-self: stretch; }
+.wf-seg { position: relative; appearance: none; border: 0; background: none; cursor: pointer; padding: 10px 18px; font: inherit; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: color-mix(in srgb, #f2f2f3 46%, transparent); border-bottom: 2px solid transparent; transition: color .2s ease, background .2s ease, border-color .2s ease; }
+.wf-seg + .wf-seg { border-left: 1px solid color-mix(in srgb, #f2f2f3 12%, transparent); }
+.wf-seg:hover { color: color-mix(in srgb, #f2f2f3 82%, transparent); background: color-mix(in srgb, #f2f2f3 5%, transparent); }
+.wf-seg.is-on { color: var(--color-accent-300); border-bottom-color: var(--color-accent-300); background: color-mix(in srgb, var(--color-accent-300) 9%, transparent); }
+@media (max-width: 420px) { .wf-seg { padding: 10px 12px; letter-spacing: .1em; } }
+/* Tarjetas de servicios para empresas */
+.wf-ecard { display: flex; flex-direction: column; padding: clamp(20px,2.4vw,26px); background: #fff; border: 1px solid var(--color-divider); transition: transform .25s cubic-bezier(.22,.61,.36,1), box-shadow .25s ease, border-color .25s ease; }
+.wf-ecard:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--color-accent-700) 40%, transparent); box-shadow: 0 14px 32px -18px rgba(10,17,24,.5); }
+.wf-ecard-i { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; margin-bottom: 16px; color: var(--color-accent-700); border: 1px solid color-mix(in srgb, var(--color-accent-700) 26%, transparent); background: color-mix(in srgb, var(--color-accent-300) 16%, transparent); }
+.wf-ecard h3 { font-family: var(--font-heading); font-weight: 600; font-size: 19px; line-height: 1.14; text-transform: uppercase; letter-spacing: .02em; margin: 0 0 8px; color: var(--color-text); }
+.wf-ecard p { font-size: 14px; line-height: 1.55; margin: 0; color: var(--color-neutral-700); }
+.wf-elist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.wf-elist li { position: relative; padding-left: 22px; font-size: 14px; line-height: 1.5; color: color-mix(in srgb, var(--color-bg) 80%, transparent); }
+.wf-elist li::before { content: ""; position: absolute; left: 0; top: .5em; width: 9px; height: 1px; background: var(--color-accent-300); box-shadow: 0 0 6px color-mix(in srgb, var(--color-accent-300) 80%, transparent); }
+.wf-ixp { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--color-divider); border: 1px solid var(--color-divider); }
+.wf-ixp li { display: flex; flex-direction: column; gap: 3px; padding: 16px 18px; background: var(--color-bg); }
+.wf-ixp b { font-size: 14.5px; font-weight: 700; color: var(--color-text); }
+.wf-mvc { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.wf-mvc-i { position: relative; padding: clamp(22px,2.6vw,30px); background: rgba(0,0,0,.2); }
+.wf-mvc-i > span { display: block; font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--color-accent-300); margin-bottom: 12px; }
+.wf-mvc-i > p { font-size: 14.5px; line-height: 1.6; margin: 0; color: color-mix(in srgb, var(--color-bg) 80%, transparent); }
+.wf-ixp span { font-size: 13.5px; line-height: 1.45; color: var(--color-neutral-700); }
 @media (max-width: 560px) { .wf-topbar-horario { display: none; } }
 @keyframes wf-blink { 0%,100% { opacity: 1 } 50% { opacity: .2 } }
 @keyframes wf-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
@@ -532,9 +556,11 @@ a:hover { color: var(--color-accent-200); }
 /* --- Hero split · texto + buscador a la izquierda, banner promocional a la derecha.
        El contenido sale de promotionsList (ver script al final del archivo). --- */
 /* El hero ocupa todo el ancho y todo el alto libre bajo la cabecera */
-.wf-hero-stage { position: relative; z-index: 10; flex: 1; display: flex; width: 100%; min-width: 0; }
-.wf-hero-stage .wf-promo-card { flex: 1; display: flex; flex-direction: column; min-width: 0; border-radius: 0; border-left: 0; border-right: 0; border-top: 0; box-shadow: none; }
-.wf-hero-stage .wf-promo-media { flex: 1; aspect-ratio: auto; min-height: clamp(420px, 62svh, 680px); }
+.wf-hero-stage { position: relative; z-index: 10; flex: 1; display: flex; width: 100%; min-width: 0; min-height: clamp(400px, 56svh, 620px); }
+.wf-hero-stage .wf-promo-card { flex: 1; position: relative; min-width: 0; overflow: hidden; border-radius: 0; border: 0; box-shadow: none; }
+/* La imagen va fuera del flujo: si no, impone su proporción natural (1000x667) y
+   en pantallas anchas estira el hero hasta empujar el título fuera de la vista. */
+.wf-hero-stage .wf-promo-media { position: absolute; inset: 0; aspect-ratio: auto; min-height: 0; }
 /* Texto de la promoción sobrepuesto en la parte de abajo de la imagen */
 .wf-hero-caption { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; padding: clamp(28px,4vw,52px) clamp(20px,5vw,64px) clamp(60px,7vw,80px); }
 .wf-hero-caption > div { width: 100%; max-width: 1240px; margin: 0 auto; }
@@ -604,7 +630,11 @@ a:hover { color: var(--color-accent-200); }
 
   <!-- Piso 1 · datos de la empresa (sobrio, sin competir con la navegación) -->
   <div class="wf-topbar">
-    <span class="wf-topbar-l"><b>Desde 2017</b> <span class="wf-topbar-sep">·</span> Fibra óptica y enlaces inalámbricos en Melipilla y Paine</span>
+    <div class="wf-segs" role="group" aria-label="Elegir tipo de cliente">
+      <button type="button" class="wf-seg is-on" data-seg-btn="hogar" aria-pressed="true">Hogar</button>
+      <button type="button" class="wf-seg" data-seg-btn="empresas" aria-pressed="false">Empresas</button>
+    </div>
+    <span class="wf-topbar-l"><b>Desde 2017</b> <span class="wf-topbar-sep">·</span> Melipilla y Paine</span>
     <span class="wf-topbar-r">
       <span class="wf-topbar-horario"><span class="wf-topbar-dot" aria-hidden="true"></span>Lun a Sáb 9:00–18:00</span>
       <a href="tel:+56989798503" style="font-variant-numeric:tabular-nums">+56 9 8979 8503</a>
@@ -641,14 +671,16 @@ a:hover { color: var(--color-accent-200); }
   </svg>
 </div>
     <img src="assets/logo.png" alt="WiFired Telecomunicaciones" style="display:block; height:48px; width:auto; max-width:none; object-fit:contain; margin-right:auto">
-    <a href="#planes" class="wf-navlink">Planes</a>
+    <a href="#planes" class="wf-navlink" data-seg="hogar">Planes</a>
+    <a href="#red" class="wf-navlink" data-seg="hogar">La red</a>
+    <a href="#servicios-emp" class="wf-navlink" data-seg="empresas" hidden>Servicios</a>
+    <a href="#carrier-emp" class="wf-navlink" data-seg="empresas" hidden>Red mayorista</a>
     <a href="#cobertura" class="wf-navlink">Cobertura</a>
-    <a href="#red" class="wf-navlink">La red</a>
     <a class="btn btn-primary" href="#contratar" style="border-radius:0; min-height:42px; padding:0 20px; background:var(--color-accent-300); border-color:var(--color-accent-300); color:var(--color-accent-900); text-transform:uppercase; letter-spacing:.06em; font-size:13px">Contratar</a>
   </nav>
 </header>
 
-<section id="inicio" style="position:relative; min-height:100svh; display:flex; flex-direction:column; background:var(--color-accent-900); overflow:hidden; isolation:isolate">
+<section id="inicio" data-seg="hogar" style="position:relative; min-height:100svh; display:flex; flex-direction:column; background:var(--color-accent-900); overflow:hidden; isolation:isolate">
   <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(to right, rgba(181,217,253,.05) 0 1px, transparent 1px 92px), repeating-linear-gradient(to bottom, rgba(181,217,253,.05) 0 1px, transparent 1px 92px)"></div>
   <canvas id="wf-net" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none" aria-hidden="true"></canvas>
   <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(120% 90% at 50% 8%, transparent 40%, rgba(10,17,24,.55) 100%)"></div>
@@ -703,6 +735,45 @@ a:hover { color: var(--color-accent-200); }
   </div>
 </section>
 
+<section id="inicio-emp" data-seg="empresas" hidden style="position:relative; min-height:82svh; display:flex; flex-direction:column; justify-content:center; background:var(--color-accent-900); color:var(--color-bg); overflow:hidden; isolation:isolate">
+  <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(to right, rgba(181,217,253,.05) 0 1px, transparent 1px 92px), repeating-linear-gradient(to bottom, rgba(181,217,253,.05) 0 1px, transparent 1px 92px)"></div>
+  <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(110% 80% at 78% 20%, color-mix(in srgb, var(--color-accent-300) 12%, transparent) 0%, transparent 60%)"></div>
+
+  <div style="position:relative; z-index:10; width:100%; max-width:1240px; margin:0 auto; padding:clamp(150px,15vw,190px) clamp(20px,5vw,64px) clamp(44px,6vw,64px)">
+    <span class="wf-riser d1" style="display:inline-flex; align-items:center; gap:9px; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; font-weight:600; color:var(--color-accent-200); border:1px solid color-mix(in srgb, var(--color-accent-200) 38%, transparent); padding:7px 14px">
+      <span style="width:7px; height:7px; background:var(--color-accent-300); display:inline-block; animation:wf-blink 1.8s ease-in-out infinite"></span>WiFired Empresas
+    </span>
+    <h1 class="wf-riser d1" style="font-family:var(--font-heading); font-weight:600; font-size:clamp(34px,5.6vw,62px); line-height:.98; letter-spacing:.005em; text-transform:uppercase; margin:clamp(18px,2.4vw,26px) 0 0; color:var(--color-bg); text-wrap:balance; max-width:20ch">Conectividad crítica<br><span style="color:var(--color-accent-300)">para tu empresa</span></h1>
+    <p class="wf-riser d2" style="font-size:clamp(15.5px,1.5vw,18.5px); line-height:1.6; max-width:56ch; margin:clamp(16px,2vw,22px) 0 0; color:color-mix(in srgb, var(--color-bg) 78%, transparent)">Enlaces dedicados de fibra y microondas, Cloud, telefonía IP e infraestructura de red para empresas e ISPs. Somos un carrier neutral: no dependemos de un solo operador.</p>
+
+    <div class="wf-riser d3" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:clamp(24px,3vw,34px)">
+      <a class="btn btn-primary" href="#contratar" style="border-radius:0; min-height:48px; padding:0 26px; background:var(--color-accent-300); border-color:var(--color-accent-300); color:var(--color-accent-900); text-transform:uppercase; letter-spacing:.06em; font-size:13.5px">Cotizar enlace</a>
+      <a class="btn" href="#servicios-emp" style="border-radius:0; min-height:48px; padding:0 26px; background:transparent; border:1px solid color-mix(in srgb, var(--color-bg) 34%, transparent); color:var(--color-bg); text-transform:uppercase; letter-spacing:.06em; font-size:13.5px; text-decoration:none; display:inline-flex; align-items:center">Ver servicios</a>
+    </div>
+  </div>
+
+  <div style="position:relative; z-index:10; border-top:1px solid color-mix(in srgb, var(--color-bg) 14%, transparent); background:rgba(0,0,0,.16)">
+    <div style="max-width:1240px; margin:0 auto; padding:0 clamp(20px,5vw,64px); display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr))">
+      <div style="padding:20px 20px 20px 0">
+        <p style="font-family:var(--font-heading); font-weight:600; font-size:clamp(26px,3vw,38px); line-height:1; margin:0 0 6px; color:var(--color-bg); font-variant-numeric:tabular-nums">2017</p>
+        <span style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:color-mix(in srgb, var(--color-bg) 52%, transparent)">Operando desde</span>
+      </div>
+      <div style="padding:20px; border-left:1px solid color-mix(in srgb, var(--color-bg) 14%, transparent)">
+        <p style="font-family:var(--font-heading); font-weight:600; font-size:clamp(26px,3vw,38px); line-height:1; margin:0 0 6px; color:var(--color-bg)">Neutral</p>
+        <span style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:color-mix(in srgb, var(--color-bg) 52%, transparent)">Carrier independiente</span>
+      </div>
+      <div style="padding:20px; border-left:1px solid color-mix(in srgb, var(--color-bg) 14%, transparent)">
+        <p style="font-family:var(--font-heading); font-weight:600; font-size:clamp(26px,3vw,38px); line-height:1; margin:0 0 6px; color:var(--color-bg); font-variant-numeric:tabular-nums">24/7</p>
+        <span style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:color-mix(in srgb, var(--color-bg) 52%, transparent)">Monitoreo de red</span>
+      </div>
+      <div style="padding:20px; border-left:1px solid color-mix(in srgb, var(--color-bg) 14%, transparent)">
+        <p style="font-family:var(--font-heading); font-weight:600; font-size:clamp(26px,3vw,38px); line-height:1; margin:0 0 6px; color:var(--color-bg)">Melipilla<span style="font-size:.55em"> y Paine</span></p>
+        <span style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:color-mix(in srgb, var(--color-bg) 52%, transparent)">Punto de interconexión</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <div style="background:#132030; border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent); border-bottom:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent); overflow:hidden">
   <div style="display:flex; width:max-content; animation:wf-marquee 46s linear infinite">
     <div style="display:flex; align-items:center; gap:32px; padding:13px 16px; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:color-mix(in srgb, var(--color-bg) 56%, transparent); white-space:nowrap"><span>Centro de Melipilla</span><span style="color:var(--color-accent-300)">+</span><span>Villa Los Aromos</span><span style="color:var(--color-accent-300)">+</span><span>Pomaire</span><span style="color:var(--color-accent-300)">+</span><span>Bollenar</span><span style="color:var(--color-accent-300)">+</span><span>Codigua</span><span style="color:var(--color-accent-300)">+</span><span>Culiprán</span><span style="color:var(--color-accent-300)">+</span><span>San Manuel</span><span style="color:var(--color-accent-300)">+</span><span>Mallarauco</span><span style="color:var(--color-accent-300)">+</span></div>
@@ -715,8 +786,10 @@ a:hover { color: var(--color-accent-200); }
   <div class="wf-2col" style="position:relative; max-width:1240px; margin:0 auto; padding:clamp(30px,4vw,48px) clamp(20px,5vw,64px); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(18px,3vw,44px); align-items:center">
     <div>
       <span style="display:inline-flex; align-items:center; gap:9px; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-300)"><span style="width:7px; height:7px; background:var(--color-accent-300); display:inline-block; animation:wf-blink 1.8s ease-in-out infinite"></span>Cobertura</span>
-      <h2 style="font-family:var(--font-heading); font-weight:600; font-size:clamp(22px,2.6vw,32px); line-height:1.06; text-transform:uppercase; letter-spacing:0.02em; margin:12px 0 0; color:var(--color-bg)">¿Ya llegó la fibra a tu calle?</h2>
-      <p style="font-size:14.5px; line-height:1.6; margin:10px 0 0; max-width:44ch; color:color-mix(in srgb, var(--color-bg) 72%, transparent)">Cobertura en Melipilla y Paine, en zona urbana y sectores rurales. Verifica tu dirección en segundos.</p>
+      <h2 data-seg="hogar" style="font-family:var(--font-heading); font-weight:600; font-size:clamp(22px,2.6vw,32px); line-height:1.06; text-transform:uppercase; letter-spacing:0.02em; margin:12px 0 0; color:var(--color-bg)">¿Ya llegó la fibra a tu calle?</h2>
+      <h2 data-seg="empresas" hidden style="font-family:var(--font-heading); font-weight:600; font-size:clamp(22px,2.6vw,32px); line-height:1.06; text-transform:uppercase; letter-spacing:0.02em; margin:12px 0 0; color:var(--color-bg)">Factibilidad para tu oficina</h2>
+      <p data-seg="hogar" style="font-size:14.5px; line-height:1.6; margin:10px 0 0; max-width:44ch; color:color-mix(in srgb, var(--color-bg) 72%, transparent)">Cobertura en Melipilla y Paine, en zona urbana y sectores rurales. Verifica tu dirección en segundos.</p>
+      <p data-seg="empresas" hidden style="font-size:14.5px; line-height:1.6; margin:10px 0 0; max-width:46ch; color:color-mix(in srgb, var(--color-bg) 72%, transparent)">Cobertura en Melipilla y Paine. Si tu dirección queda fuera del alcance de la fibra, evaluamos un enlace microondas.</p>
     </div>
     <div id="cobertura" class="wf-riser d3" style="width:min(580px, 100%); scroll-margin-top:130px">
       <div class="wf-checkwrap" style="display:flex; align-items:stretch; border:1px solid color-mix(in srgb, var(--color-bg) 34%, transparent); background:color-mix(in srgb, #000 24%, transparent); backdrop-filter:blur(6px); transition:border-color .2s ease, box-shadow .2s ease">
@@ -744,7 +817,7 @@ a:hover { color: var(--color-accent-200); }
   </div>
 </section>
 
-<section id="planes" style="background:var(--color-bg); color:var(--color-text)">
+<section id="planes" data-seg="hogar" style="background:var(--color-bg); color:var(--color-text)">
   <div style="max-width:1240px; margin:0 auto; padding:clamp(64px,8vw,108px) clamp(20px,5vw,64px) clamp(40px,5vw,64px)">
     <div data-reveal="" style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:clamp(34px,4vw,52px)">
       <div>
@@ -866,7 +939,7 @@ a:hover { color: var(--color-accent-200); }
   </div>
 </section>
 
-<section id="red" style="position:relative; background:var(--color-accent-900); color:var(--color-bg); overflow:hidden; isolation:isolate; border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)">
+<section id="red" data-seg="hogar" style="position:relative; background:var(--color-accent-900); color:var(--color-bg); overflow:hidden; isolation:isolate; border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)">
   <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(to right, rgba(181,217,253,.04) 0 1px, transparent 1px 92px), repeating-linear-gradient(to bottom, rgba(181,217,253,.04) 0 1px, transparent 1px 92px)"></div>
   <div class="wf-2col" style="position:relative; max-width:1240px; margin:0 auto; padding:clamp(64px,8vw,104px) clamp(20px,5vw,64px); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(32px,5vw,72px); align-items:center">
     <div data-reveal="">
@@ -952,7 +1025,7 @@ a:hover { color: var(--color-accent-200); }
   </div>
 </section>
 
-<section id="garantias" style="position:relative; background:#132030; color:var(--color-bg); overflow:hidden; isolation:isolate; border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)">
+<section id="garantias" data-seg="hogar" style="position:relative; background:#132030; color:var(--color-bg); overflow:hidden; isolation:isolate; border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)">
   <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(to right, rgba(181,217,253,.035) 0 1px, transparent 1px 92px), repeating-linear-gradient(to bottom, rgba(181,217,253,.035) 0 1px, transparent 1px 92px)"></div>
   <div class="wf-2col" style="position:relative; max-width:1240px; margin:0 auto; padding:clamp(56px,7vw,96px) clamp(20px,5vw,64px); display:grid; grid-template-columns:minmax(0,0.8fr) minmax(0,1.2fr); gap:clamp(32px,5vw,72px); align-items:center">
     <div class="wf-armed" style="display:flex; flex-direction:column; align-items:center; text-align:center">
@@ -983,7 +1056,7 @@ a:hover { color: var(--color-accent-200); }
   </div>
 </section>
 
-<section id="instalacion" style="background:var(--color-bg); color:var(--color-text)">
+<section id="instalacion" data-seg="hogar" style="background:var(--color-bg); color:var(--color-text)">
   <div style="max-width:1240px; margin:0 auto; padding:clamp(64px,8vw,104px) clamp(20px,5vw,64px)">
     <div data-reveal="" style="margin-bottom:clamp(34px,4vw,48px)">
       <span style="display:block; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">04 — Instalación</span>
@@ -1010,7 +1083,7 @@ a:hover { color: var(--color-accent-200); }
   </div>
 </section>
 
-<section id="preguntas" style="background:var(--color-bg); color:var(--color-text)">
+<section id="preguntas" data-seg="hogar" style="background:var(--color-bg); color:var(--color-text)">
   <div style="max-width:900px; margin:0 auto; padding:clamp(48px,6vw,80px) clamp(20px,5vw,64px)">
     <div data-reveal="" style="margin-bottom:clamp(20px,3vw,32px)">
       <span style="display:block; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">05 — Preguntas</span>
@@ -1065,12 +1138,120 @@ a:hover { color: var(--color-accent-200); }
   </div>
 </section>
 
+
+<section id="servicios-emp" data-seg="empresas" hidden style="background:var(--color-bg); color:var(--color-text)">
+  <div style="max-width:1240px; margin:0 auto; padding:clamp(64px,8vw,104px) clamp(20px,5vw,64px)">
+    <div data-reveal="" style="margin-bottom:clamp(34px,4vw,48px)">
+      <span style="display:block; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">01 — Servicios</span>
+      <h2 style="font-family:var(--font-heading); font-weight:600; font-size:clamp(30px,3.8vw,48px); line-height:1.02; text-transform:uppercase; letter-spacing:0.02em; margin:14px 0 0">Todo lo que tu<br>empresa necesita</h2>
+      <p style="font-size:15.5px; line-height:1.65; margin:18px 0 0; max-width:56ch; color:var(--color-neutral-700)">Diseñamos la solución según el rubro, la cantidad de puestos y el nivel de servicio que necesitas. Cotización en 24 horas.</p>
+    </div>
+    <ul style="list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px">
+      <li class="wf-ecard"><span class="wf-ecard-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"></path><path d="M4 12a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4"></path><path d="M4 12a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4"></path></svg></span><h3>Enlaces de fibra dedicados</h3><p>Conectividad exclusiva y simétrica de alta velocidad, para empresas que requieren estabilidad y desempeño constante.</p></li>
+      <li class="wf-ecard"><span class="wf-ecard-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-8"></path><path d="M5 12a7 7 0 0 1 14 0"></path><path d="M2 9a10 10 0 0 1 20 0"></path><circle cx="12" cy="20" r="1.4"></circle></svg></span><h3>Enlaces microondas</h3><p>Solución inalámbrica para conectar sitios remotos con alta capacidad de transmisión y rápida implementación.</p></li>
+      <li class="wf-ecard"><span class="wf-ecard-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg></span><h3>Servicios Cloud</h3><p>Infraestructura en la nube para almacenamiento, aplicaciones y procesamiento de datos, con alta disponibilidad y seguridad.</p></li>
+      <li class="wf-ecard"><span class="wf-ecard-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 3.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"></path></svg></span><h3>Telefonía IP</h3><p>Comunicación empresarial por internet, con centralitas virtuales y llamadas internacionales a bajo costo.</p></li>
+      <li class="wf-ecard"><span class="wf-ecard-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7" rx="1.5"></rect><rect x="3" y="14" width="18" height="7" rx="1.5"></rect><path d="M7 6.5h.01"></path><path d="M7 17.5h.01"></path></svg></span><h3>Virtualización</h3><p>Optimización de recursos de TI creando entornos virtuales para servidores, almacenamiento y aplicaciones.</p></li>
+      <li class="wf-ecard"><span class="wf-ecard-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16"></path><path d="M9 4v16"></path><path d="M14 4v16"></path><path d="M19 4v16"></path><path d="M4 9h15" opacity=".55"></path><path d="M4 15h15" opacity=".55"></path></svg></span><h3>Cableado estructurado</h3><p>Diseño e instalación de redes de comunicación seguras y eficientes para voz, datos y video.</p></li>
+      <li class="wf-ecard"><span class="wf-ecard-i"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"></path><path d="M12 7v5l3 2"></path><path d="M16 3h5v5"></path></svg></span><h3>Soporte y mantención TIC</h3><p>Monitoreo y mantenimiento preventivo y correctivo de redes, servidores e infraestructura tecnológica.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section id="carrier-emp" data-seg="empresas" hidden style="position:relative; background:#132030; color:var(--color-bg); overflow:hidden; isolation:isolate; border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)">
+  <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(to right, rgba(181,217,253,.035) 0 1px, transparent 1px 92px), repeating-linear-gradient(to bottom, rgba(181,217,253,.035) 0 1px, transparent 1px 92px)"></div>
+  <div style="position:relative; max-width:1240px; margin:0 auto; padding:clamp(56px,7vw,96px) clamp(20px,5vw,64px)">
+    <div data-reveal="" style="margin-bottom:clamp(30px,4vw,44px)">
+      <span style="display:inline-flex; align-items:center; gap:9px; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-300); border:1px solid color-mix(in srgb, var(--color-accent-300) 40%, transparent); padding:6px 12px"><span style="width:7px; height:7px; background:var(--color-accent-300); display:inline-block; animation:wf-blink 1.6s ease-in-out infinite"></span>02 — Red mayorista</span>
+      <h2 style="font-family:var(--font-heading); font-weight:600; font-size:clamp(30px,3.8vw,48px); line-height:1.02; text-transform:uppercase; letter-spacing:0.02em; margin:20px 0 0; color:var(--color-bg)">Carrier neutral<br>para ISPs y empresas</h2>
+      <p style="font-size:15px; line-height:1.6; max-width:60ch; margin:15px 0 0; color:color-mix(in srgb, var(--color-bg) 74%, transparent)">Ser carrier neutral significa que entregamos fibra, enlaces dedicados y acceso a data centers sin estar atados a un solo operador. Tú eliges con quién te conectas.</p>
+    </div>
+    <div class="wf-2col" style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(20px,3vw,40px); align-items:start">
+      <div class="blueprint" data-reveal="" style="position:relative; padding:clamp(22px,3vw,32px); background:rgba(0,0,0,.18)">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <h3 style="font-family:var(--font-heading); font-weight:600; font-size:21px; text-transform:uppercase; letter-spacing:.02em; margin:0 0 4px; color:var(--color-bg)">POP de interconexión</h3>
+        <p style="font-size:13.5px; line-height:1.55; margin:0 0 16px; color:color-mix(in srgb, var(--color-bg) 66%, transparent)">Operadores e ISPs se conectan a múltiples redes y proveedores de tránsito IP sin restricciones.</p>
+        <ul class="wf-elist">
+          <li>Interconexión con múltiples carriers y Tier 1</li>
+          <li>Optimización del tráfico con rutas más eficientes</li>
+          <li>Menores costos de transporte con infraestructura compartida</li>
+          <li>Escalabilidad para crecer sin limitaciones</li>
+        </ul>
+      </div>
+      <div class="blueprint" data-reveal="" style="position:relative; padding:clamp(22px,3vw,32px); background:rgba(0,0,0,.18)">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <h3 style="font-family:var(--font-heading); font-weight:600; font-size:21px; text-transform:uppercase; letter-spacing:.02em; margin:0 0 4px; color:var(--color-bg)">Colocation</h3>
+        <p style="font-size:13.5px; line-height:1.55; margin:0 0 16px; color:color-mix(in srgb, var(--color-bg) 66%, transparent)">Espacio seguro para alojar equipos de telecomunicaciones, servidores y dispositivos críticos.</p>
+        <ul class="wf-elist">
+          <li>Energía redundante y climatización controlada</li>
+          <li>Monitoreo 24/7 y seguridad avanzada</li>
+          <li>Acceso remoto y gestión flexible</li>
+          <li>Conexión directa a fibra de alta capacidad</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ixp-emp" data-seg="empresas" hidden style="background:var(--color-bg); color:var(--color-text)">
+  <div class="wf-2col" style="max-width:1240px; margin:0 auto; padding:clamp(64px,8vw,104px) clamp(20px,5vw,64px); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(32px,5vw,72px); align-items:center">
+    <div data-reveal="">
+      <span style="display:block; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">03 — Interconexión local</span>
+      <h2 style="font-family:var(--font-heading); font-weight:600; font-size:clamp(30px,3.8vw,48px); line-height:1.02; text-transform:uppercase; letter-spacing:0.02em; margin:14px 0 0">Descentralizar<br>el internet</h2>
+      <p style="font-size:15.5px; line-height:1.65; margin:18px 0 0; max-width:52ch; color:var(--color-neutral-700)">Hoy gran parte del tráfico de Chile pasa por Santiago: más latencia, más costo y menos eficiencia para las regiones. Estamos levantando un punto de interconexión local en Melipilla y Paine para que ISPs, empresas y proveedores de contenido intercambien tráfico de forma directa.</p>
+      <a class="btn btn-primary" href="#contratar" style="display:inline-flex; align-items:center; margin-top:26px; border-radius:0; min-height:46px; padding:0 24px; text-transform:uppercase; letter-spacing:.06em; font-size:13.5px; text-decoration:none">Conversemos</a>
+    </div>
+    <ul class="wf-ixp" data-reveal="">
+      <li><b>Menor latencia</b><span>El tráfico se resuelve dentro de la región</span></li>
+      <li><b>Menos costo de transporte</b><span>Para ISPs y empresas de la zona</span></li>
+      <li><b>Más estabilidad</b><span>Redundancia en la conectividad local</span></li>
+      <li><b>Crecimiento digital</b><span>Mejor calidad de servicio en la comuna</span></li>
+      <li><b>Independencia tecnológica</b><span>Menos dependencia de los carriers centrales</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="compromiso-emp" data-seg="empresas" hidden style="position:relative; background:var(--color-accent-900); color:var(--color-bg); overflow:hidden; isolation:isolate; border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)">
+  <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(to right, rgba(181,217,253,.035) 0 1px, transparent 1px 92px), repeating-linear-gradient(to bottom, rgba(181,217,253,.035) 0 1px, transparent 1px 92px)"></div>
+  <div style="position:relative; max-width:1240px; margin:0 auto; padding:clamp(56px,7vw,96px) clamp(20px,5vw,64px)">
+
+    <div class="wf-2col" data-reveal="" style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(28px,5vw,72px); align-items:start; margin-bottom:clamp(34px,4vw,52px)">
+      <div>
+        <span style="display:inline-flex; align-items:center; gap:9px; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-300); border:1px solid color-mix(in srgb, var(--color-accent-300) 40%, transparent); padding:6px 12px"><span style="width:7px; height:7px; background:var(--color-accent-300); display:inline-block; animation:wf-blink 1.6s ease-in-out infinite"></span>04 — Quiénes somos</span>
+        <h2 style="font-family:var(--font-heading); font-weight:600; font-size:clamp(30px,3.8vw,48px); line-height:1.02; text-transform:uppercase; letter-spacing:0.02em; margin:20px 0 0; color:var(--color-bg)">Operador local,<br>estándar profesional</h2>
+      </div>
+      <p style="font-size:15.5px; line-height:1.7; margin:0; color:color-mix(in srgb, var(--color-bg) 76%, transparent); align-self:center">Telecomunicaciones WiFired Ltda. opera desde 2017 entregando enlaces inalámbricos y fibra óptica a hogares y empresas. Trabajamos con estándar de calidad tanto en lo técnico como en lo comercial y administrativo.</p>
+    </div>
+
+    <div class="wf-mvc">
+      <article class="blueprint wf-mvc-i" data-reveal="">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <span>Misión</span>
+        <p>Conectar a personas y empresas con la tecnología más avanzada, entregando un servicio confiable, eficiente y personalizado.</p>
+      </article>
+      <article class="blueprint wf-mvc-i" data-reveal="">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <span>Visión</span>
+        <p>Ser referentes en telecomunicaciones por innovación y excelencia, expandiendo la cobertura y construyendo relaciones de largo plazo.</p>
+      </article>
+      <article class="blueprint wf-mvc-i" data-reveal="">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <span>Compromiso</span>
+        <p>Buscar la mejor solución técnica y comercial para cada necesidad, con el servicio al cliente como prioridad y mejora continua de procesos.</p>
+      </article>
+    </div>
+
+  </div>
+</section>
 <section id="contratar" style="background:var(--color-bg); color:var(--color-text); border-top:1px solid var(--color-divider)">
   <div class="wf-2col" style="max-width:1240px; margin:0 auto; padding:clamp(56px,7vw,96px) clamp(20px,5vw,64px); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(36px,5vw,80px); align-items:start">
     <div data-reveal="">
-      <span style="display:block; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">06 — Contratar</span>
-      <h2 style="font-family:var(--font-heading); font-weight:600; font-size:clamp(30px,3.8vw,48px); line-height:1.02; text-transform:uppercase; letter-spacing:0.02em; margin:14px 0 0">Hablemos y<br>conéctate</h2>
-      <p style="font-size:15.5px; line-height:1.65; margin:20px 0 0; max-width:42ch; color:var(--color-neutral-700)">Confirmamos factibilidad en tu dirección y agendamos la instalación. Respondemos dentro del horario de atención.</p>
+      <span data-seg="hogar" style="display:block; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">06 — Contratar</span>
+      <span data-seg="empresas" hidden style="display:block; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">04 — Cotizar</span>
+      <h2 data-seg="hogar" style="font-family:var(--font-heading); font-weight:600; font-size:clamp(30px,3.8vw,48px); line-height:1.02; text-transform:uppercase; letter-spacing:0.02em; margin:14px 0 0">Hablemos y<br>conéctate</h2>
+      <h2 data-seg="empresas" hidden style="font-family:var(--font-heading); font-weight:600; font-size:clamp(30px,3.8vw,48px); line-height:1.02; text-transform:uppercase; letter-spacing:0.02em; margin:14px 0 0">Cuéntanos qué<br>necesita tu empresa</h2>
+      <p data-seg="hogar" style="font-size:15.5px; line-height:1.65; margin:20px 0 0; max-width:42ch; color:var(--color-neutral-700)">Confirmamos factibilidad en tu dirección y agendamos la instalación. Respondemos dentro del horario de atención.</p>
+      <p data-seg="empresas" hidden style="font-size:15.5px; line-height:1.65; margin:20px 0 0; max-width:44ch; color:var(--color-neutral-700)">Dimensionamos el enlace, la capacidad y el nivel de servicio según tu rubro y la cantidad de puestos. Cotización en 24 horas.</p>
       <div style="display:grid; margin-top:32px; border-top:1px solid var(--color-divider)">
         <a href="https://wa.me/56989798503" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:14px; padding:18px 0; border-bottom:1px solid var(--color-divider); text-decoration:none; color:var(--color-text)">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-700); flex:none"><path d="M21 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 3.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"></path></svg>
@@ -1091,17 +1272,32 @@ a:hover { color: var(--color-accent-200); }
       <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
       <div class="field"><label for="wf3-nom">Nombre</label><input class="input" id="wf3-nom" type="text" placeholder="Tu nombre" style="min-height:46px"></div>
       <div class="field"><label for="wf3-fono">Teléfono</label><input class="input" id="wf3-fono" type="tel" placeholder="+56 9 ..." style="min-height:46px"></div>
-      <div class="field"><label for="wf3-dir">Dirección de instalación</label><input class="input" id="wf3-dir" type="text" placeholder="Calle, número, sector" style="min-height:46px"></div>
-      <div class="field"><label>Plan que te interesa</label>
+      <div class="field" data-seg="empresas" hidden><label for="wf3-emp">Empresa</label><input class="input" id="wf3-emp" type="text" placeholder="Razón social o nombre de fantasía" style="min-height:46px"></div>
+      <div class="field"><label for="wf3-dir" data-seg="hogar">Dirección de instalación</label><label for="wf3-dir" data-seg="empresas" hidden>Dirección de la sucursal u oficina</label><input class="input" id="wf3-dir" type="text" placeholder="Calle, número, sector" style="min-height:46px"></div>
+
+      <div class="field" data-seg="hogar"><label>Plan que te interesa</label>
         <div style="display:flex; flex-direction:column; gap:11px; margin-top:6px">
           <label class="radio"><input type="radio" name="wf3-plan"><span class="dot"></span>Básico 400 Mbps — $13.990</label>
           <label class="radio"><input type="radio" name="wf3-plan" checked><span class="dot"></span>Medio 650 Mbps — $19.990</label>
           <label class="radio"><input type="radio" name="wf3-plan"><span class="dot"></span>Full 940 Mbps — $29.990</label>
           <label class="radio"><input type="radio" name="wf3-plan"><span class="dot"></span>Duo con TV — desde $21.990</label>
-          <label class="radio"><input type="radio" name="wf3-plan"><span class="dot"></span>Empresas — a cotizar</label>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary" style="min-height:48px; margin-top:6px; font-size:15px; border-radius:0">Solicitar instalación</button>
+
+      <div class="field" data-seg="empresas" hidden><label>Servicio que necesitas</label>
+        <div style="display:flex; flex-direction:column; gap:11px; margin-top:6px">
+          <label class="radio"><input type="radio" name="wf3-serv" checked><span class="dot"></span>Enlace de fibra dedicado</label>
+          <label class="radio"><input type="radio" name="wf3-serv"><span class="dot"></span>Enlace microondas</label>
+          <label class="radio"><input type="radio" name="wf3-serv"><span class="dot"></span>Cloud o virtualización</label>
+          <label class="radio"><input type="radio" name="wf3-serv"><span class="dot"></span>Telefonía IP</label>
+          <label class="radio"><input type="radio" name="wf3-serv"><span class="dot"></span>Cableado estructurado</label>
+          <label class="radio"><input type="radio" name="wf3-serv"><span class="dot"></span>Soporte y mantención TIC</label>
+          <label class="radio"><input type="radio" name="wf3-serv"><span class="dot"></span>Carrier / interconexión para ISP</label>
+        </div>
+      </div>
+      <div class="field" data-seg="empresas" hidden><label for="wf3-puestos">Puestos de trabajo o sedes</label><input class="input" id="wf3-puestos" type="text" placeholder="Ej: 25 puestos, 2 sucursales" style="min-height:46px"></div>
+
+      <button type="submit" class="btn btn-primary" style="min-height:48px; margin-top:6px; font-size:15px; border-radius:0"><span data-seg="hogar">Solicitar instalación</span><span data-seg="empresas" hidden>Solicitar cotización</span></button>
       <p style="font-size:12.5px; line-height:1.5; margin:0; color:var(--color-neutral-600)">Te contactamos dentro del horario de atención. No compartimos tus datos con terceros.</p>
     </form>
   </div>
@@ -1116,10 +1312,13 @@ a:hover { color: var(--color-accent-200); }
     <div>
       <span style="display:block; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-accent-300); margin-bottom:14px">Servicios</span>
       <div style="display:flex; flex-direction:column; gap:9px; font-size:14px">
-        <a href="#planes" style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Banda ancha hogar</a>
-        <a href="#planes" style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Planes Duo con TV</a>
-        <a href="#contratar" style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Internet empresas</a>
-        <a href="#instalacion" style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Instalación y soporte</a>
+        <a href="#planes" data-seg="hogar" style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Banda ancha hogar</a>
+        <a href="#planes" data-seg="hogar" style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Planes Duo con TV</a>
+        <a href="#instalacion" data-seg="hogar" style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Instalación y soporte</a>
+        <a href="#servicios-emp" data-seg="empresas" hidden style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Enlaces dedicados</a>
+        <a href="#servicios-emp" data-seg="empresas" hidden style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Cloud y telefonía IP</a>
+        <a href="#carrier-emp" data-seg="empresas" hidden style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Carrier neutral y colocation</a>
+        <a href="#ixp-emp" data-seg="empresas" hidden style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">Punto de interconexión</a>
       </div>
     </div>
     <div>
@@ -1620,6 +1819,49 @@ a:hover { color: var(--color-accent-200); }
   });
 
   applyPause();
+})();
+</script>
+
+<script>
+/* ==========================================================================
+   VISTA HOGAR / EMPRESAS
+   --------------------------------------------------------------------------
+   El sitio funciona como dos páginas en paralelo dentro del mismo archivo.
+   Cada bloque lleva data-seg="hogar" o data-seg="empresas"; lo que no lleva
+   data-seg se muestra siempre (cobertura, contacto, pie de página).
+   Para agregar una sección nueva basta ponerle su data-seg.
+   ========================================================================== */
+(function () {
+  var root = document.getElementById('wf-root');
+  var botones = Array.prototype.slice.call(document.querySelectorAll('[data-seg-btn]'));
+  if (!root || !botones.length) return;
+
+  function aplicar(seg, irArriba) {
+    root.setAttribute('data-vista', seg);
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-seg]'), function (el) {
+      el.hidden = el.getAttribute('data-seg') !== seg;
+    });
+
+    botones.forEach(function (b) {
+      var activo = b.getAttribute('data-seg-btn') === seg;
+      b.classList.toggle('is-on', activo);
+      b.setAttribute('aria-pressed', activo ? 'true' : 'false');
+    });
+
+    // La dirección refleja la vista, así se puede compartir el enlace
+    try {
+      history.replaceState(null, '', seg === 'empresas' ? '#empresas' : location.pathname + location.search);
+    } catch (e) { /* sin permiso de historial: no pasa nada */ }
+
+    if (irArriba) window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  botones.forEach(function (b) {
+    b.addEventListener('click', function () { aplicar(b.getAttribute('data-seg-btn'), true); });
+  });
+
+  aplicar(location.hash === '#empresas' ? 'empresas' : 'hogar', false);
 })();
 </script>
 

@@ -1,318 +1,55 @@
-# Mapa de Arquitectura — WiFired Landing Page
+# Mapa de Arquitectura — WiFired
 
-| Módulo | Ruta/Vista | Archivo principal | Función/Propósito |
-|--------|-----------|-------------------|-------------------|
-| Landing page | `/` | `index.html` | Página única con toda la info: hero, planes, cobertura, contacto |
-| Cabecera | fija arriba | `index.html` `<header>` | 2 pisos: barra de datos + navegación |
-| Logo principal | — | `assets/logo.png` | Logo WiFired a color en blanco |
-| Favicon | — | `assets/favicon.png` | Ícono del navegador |
-| Apple touch icon | — | `assets/apple-touch-icon.png` | Ícono para iOS |
-| Open Graph | — | `assets/og-image.png` | Imagen para compartir en redes |
-| Fuentes | — | `assets/fonts/*.woff2` | Barlow y Barlow Condensed (400, 500, 600, 700) |
-| Bóveda Obsidian | — | `Wifired pagina/` | Notas del proyecto (no va al repo) |
-| Docs proyecto | — | `README.md` | Documentación general del repo |
-| Dev server | — | `.claude/launch.json` | Config servidor local (npx serve :8080) para preview |
+Índice del proyecto. **Empieza siempre por acá** antes de buscar en el código.
 
-## Compromiso de calidad · Medidor y tarjetas
+## Notas
 
-Sección `#garantias`. Se activa al entrar en pantalla con el
-IntersectionObserver que **ya existía** en el archivo (no se creó otro).
+| Nota | Qué contiene |
+|------|--------------|
+| [[Datos del negocio]] | Identidad, dirección, horarios, cobertura, planes vigentes |
+| [[Vistas Hogar y Empresas]] | Cómo funciona el cambio entre las dos páginas + la cabecera |
+| [[Vista Empresas]] | Todo lo de la página de empresas |
+| [[Compromiso de calidad]] | Medidor de uptime y tarjetas de garantía (solo Hogar) |
+| [[Mapa y contacto]] | Mapa oscuro, pin, horarios dinámicos, enlace a Google Maps |
+| [[Animaciones]] | Esquema de red, carrusel del hero y efectos |
 
-### Medidor de uptime (gauge)
+## Archivos del proyecto
 
-| Elemento | Dónde | Detalle |
-|----------|-------|---------|
-| Arco de relleno | `#wf-gauge` | `<circle>` r=118, perímetro 741,4 |
-| Número | `<span data-count>` | Dentro del `<p>`; el `%` es un hermano aparte |
+| Módulo | Ruta | Función |
+|--------|------|---------|
+| Página completa | `index.html` | Todo el sitio en un archivo (HTML + CSS + JS) |
+| Reglas de trabajo | `CLAUDE.md` | Las 4 reglas del proyecto |
+| Logo | `assets/logo.png` | Logo a color en blanco |
+| Favicon | `assets/favicon.png` | Ícono del navegador |
+| Ícono iOS | `assets/apple-touch-icon.png` | Para iPhone |
+| Imagen al compartir | `assets/og-image.png` | WhatsApp, Facebook, LinkedIn |
+| Fuentes | `assets/fonts/*.woff2` | Barlow y Barlow Condensed |
+| Servidor local | `.claude/launch.json` | `npx serve` en el puerto 8080 |
+| Esta bóveda | `Wifired pagina/` | Notas del proyecto (no va al repo) |
 
-Atributos que controlan el medidor (en el `<span>` del número):
+## Secciones del sitio, en orden
 
-| Atributo | Valor | Qué hace |
-|----------|-------|----------|
-| `data-count` | `99.08` | Valor final |
-| `data-decimals` | `2` | Decimales (usa coma) |
-| `data-duration` | `1500` | Milisegundos de la animación |
-| `data-gauge` | `#wf-gauge` | Selector del arco a mover |
-| `data-gauge-arc` | `556` | Largo del arco que equivale al 100% |
+| id | Vista | Qué es |
+|----|-------|--------|
+| `inicio` | Hogar | Portada con carrusel de promos |
+| `inicio-emp` | Empresas | Portada de empresas |
+| *(sin id)* | Ambas | Franja del buscador de cobertura |
+| `planes` | Hogar | Los planes con precios |
+| `red` | Hogar | Esquema de la red (WF-NODO-01) |
+| `garantias` | Hogar | Compromiso de calidad |
+| `instalacion` | Hogar | Del sí a la conexión en 48 h |
+| `preguntas` | Hogar | Preguntas frecuentes |
+| `servicios-emp` | Empresas | Los 7 servicios |
+| `carrier-emp` | Empresas | Carrier neutral, POP y colocation |
+| `ixp-emp` | Empresas | Punto de interconexión local |
+| `compromiso-emp` | Empresas | Misión, visión y compromiso |
+| `contratar` | Ambas | Contacto, mapa y formulario |
 
-- **La función `count()` fue extendida, no duplicada.** Ahora, si el elemento
-  trae `data-gauge`, mueve el número Y el arco **en el mismo bucle de
-  `requestAnimationFrame`**. Así nunca se desincronizan y no se agrega un
-  segundo bucle al hilo principal (requisito de 60 FPS).
-- `data-duration` es opcional: los demás contadores siguen usando 1100ms.
-- Con **movimiento reducido** el contador no anima: pinta el valor final de una
-  vez (antes no tenía esa protección).
-- El HTML deja el arco en su valor final (`551 190`) como **respaldo si el JS no
-  carga**; al animar, el script parte de 0. Verificado: termina en `550.9 190.5`,
-  que es 556 × 99,08% — coincide con el diseño original.
+## Avisos importantes
 
-### Badge "en vivo"
-
-- `.wf-live` + `.wf-live-dot` con `@keyframes wf-ping`.
-- Texto: "Sistema operativo · Monitoreo 24/7". **Reemplazó** al antiguo
-  "Red monitoreada 24/7" para no repetir lo mismo dos veces.
-- Es el único elemento **verde** (`#34d399`) de la página: es la convención de
-  los paneles de estado. El resto de la paleta sigue siendo azul.
-
-### Tarjetas de garantía
-
-- `.wf-glist` / `.wf-gitem`. Los 5 textos son **exactamente los originales**.
-- El `<svg>` del check usa `stroke="currentColor"` para que el color se pueda
-  animar por CSS. Si lo cambias a un color fijo, el resplandor deja de funcionar.
-- Efectos al pasar el cursor (verificados con valores computados):
-
-| Efecto | Sin cursor | Con cursor |
-|--------|-----------|------------|
-| Elevación | `none` | `translateY(-2px)` |
-| Fondo | `rgba(255,255,255,.05)` | `rgba(255,255,255,.086)` |
-| Check | `rgb(181,217,253)` | `rgb(220,238,255)` + resplandor 7px |
-| Etiqueta | opacidad 0 | opacidad 1 |
-
-- `tabindex="0"` + `:focus-within` para que también funcione con teclado.
-- **Etiqueta flotante `.wf-tag`:** solo aparece desde **900px de ancho Y con
-  cursor real** (`@media (min-width:900px) and (hover:hover)`). En móvil y
-  tablet táctil está oculta a propósito: ahí no hay hover y taparía el texto.
-
-| Garantía | Etiqueta técnica |
-|----------|------------------|
-| Velocidad garantizada | Potencia óptica medida |
-| Fibra propia | Tecnología GPON |
-| Equipos ZTE | Wi-Fi 6 doble banda |
-| Soporte local | Lun a Sáb 9:00-18:00 |
-| Sin permanencia | Precio mes a mes |
-
-## Contacto · Horarios y estado de la sucursal
-
-**Horarios publicados** (texto en `index.html`, bloque de contacto):
-- Sucursal: **Lunes a Sábado 9:00 - 18:00 hrs**. Domingos cerrado.
-- Emergencias por WhatsApp: **8:00 - 18:00 hrs**.
-
-**Indicador dinámico** (`.wf-horario`, script "Estado de la sucursal"):
-
-| Función | Qué hace |
-|---------|----------|
-| `estaAbierto()` | `true` solo Lun-Sáb entre 09:00 y 17:59. `false` domingo o fuera de rango |
-| `ahoraEnChile()` | Obtiene día y hora en `America/Santiago` vía `Intl.DateTimeFormat` |
-| `pintar()` | Escribe "Sucursal abierta ahora" o "Sucursal cerrada · escríbenos" |
-
-- Usa **hora de Chile**, no el reloj del visitante: así es correcto aunque
-  entren desde otro país o tengan mal la hora del equipo.
-- Se refresca sola cada 60s, por si cruzan la hora de apertura o cierre con la
-  página abierta.
-- Si el navegador no soporta zonas horarias, cae al reloj local (respaldo).
-- **OJO:** el 24/7 de las secciones "Monitoreo del nodo" y "Red monitoreada"
-  se refiere al monitoreo automático de red, NO a atención de personas.
-  Esos NO se tocaron y no contradicen el horario de atención.
-
-## Contacto · Mapa oscuro de la sucursal
-
-| Elemento | Dónde | Detalle |
-|----------|-------|---------|
-| Contenedor | `#wf-map` | Alto 210px, fondo `#0d1520` |
-| Librería | Leaflet 1.9.4 | Desde cdnjs, con SRI verificado |
-| Base | Esri Dark Gray Canvas | Sin clave de API |
-| Etiquetas | Esri Dark Gray Reference | Nombres de calles |
-| Pin | `.wf-pin` + `wf-pinpulse` | Punto neón con 2 anillos de pulso |
-| Coordenadas | `SUCURSAL` en el script | lat -33.6882825, lon -71.2168438, zoom 16 |
-
-### Dirección de la sucursal
-
-**C. Libertad 701 (Esq. Silva Chávez), Melipilla**
-
-- Coordenadas obtenidas del **nodo real donde se cruzan ambas calles** en
-  OpenStreetMap (consulta Overpass), no estimadas a ojo.
-- Aparece en 3 lugares, mantenerlos alineados si cambia:
-  1. `SUCURSAL` en el script del mapa
-  2. Texto de la tarjeta de contacto
-  3. `aria-label` del `#wf-map`
-- La garantía "Soporte local" dice "sucursal en el centro de Melipilla".
-  Es uno de los 5 textos protegidos: **no se toca**.
-
-### ⚠️ Zoom máximo del mapa: 16
-
-**No subir a 17.** Esri Dark Gray no tiene cartografía sobre z16 en Melipilla:
-a z17 los tiles responden HTTP 200 pero la imagen dice
-**"Map data not yet available"** (gris, sin calles).
-
-Lección: comprobar que un tile *cargue* no basta — hay que **mirarlo**.
-Un 200 con 256px puede ser una imagen de relleno.
-
-- **Por qué NO se usa CartoDB Dark:** desde hace un tiempo devuelve los tiles
-  con la marca de agua **"API KEY REQUIRED"** encima si no pagas clave.
-  Se probó y se descartó. Esri Dark Gray es oscuro y no pide clave.
-- El mapa es **de solo lectura** (sin arrastrar ni zoom) para que no secuestre
-  el scroll de la página. Para explorar está "Ver mapa completo".
-- La atribución "Tiles © Esri" es **obligatoria por licencia**: no quitarla.
-- `.wf-pin` necesita `display:block` porque es un `<span>` y si no, el ancho y
-  alto no se aplican y el pin queda invisible (ya pasó una vez).
-- Si mueves el pin, cambia `SUCURSAL` **y** el enlace "Ver mapa completo".
-
-### Jerarquía de capas (z-index) — NO romper
-
-| Capa | z-index | Dónde |
-|------|---------|-------|
-| Barra de progreso | 1001 | `#wf-progress` |
-| Navegación | 1000 | `<nav>` (estilo en línea) |
-| Botón WhatsApp | 55 | `#wf-fab` |
-| Mapa | **0** | `#wf-map` con `isolation: isolate` |
-
-- **El bug que se corrigió:** el `<nav>` tenía z-index 50, pero Leaflet pone sus
-  controles en **z-index 1000**, así que el mapa se montaba sobre la barra.
-- **La solución de fondo es `isolation: isolate` en `#wf-map`**: crea un contexto
-  de apilamiento propio, así nada de adentro puede treparse afuera, sin importar
-  el z-index que Leaflet use internamente.
-- `#wf-map .leaflet-top, .leaflet-bottom { z-index: 10 }` baja los controles.
-- **NO bajar los z-index de cada `.leaflet-*-pane` por separado.** Leaflet los usa
-  para apilar sus capas (tiles 200 < marcador 600). Aplanarlos esconde el pin.
-- Verificado con `elementFromPoint`: con el mapa solapando la barra, al frente
-  queda un enlace de la navegación, no el mapa.
-
-### Botón "Ver mapa completo"
-
-- Clase `.wf-maplink`. Apunta a la búsqueda directa en Google Maps:
-  `https://www.google.com/maps/search/?api=1&query=Libertad+701,+Silva+Chavez,+Melipilla`
-- `target="_blank"` + `rel="noopener noreferrer"` → abre pestaña nueva sin
-  recargar ni afectar la landing.
-- Icono SVG de enlace externo + resplandor cian al pasar el cursor.
-- Incluye texto `.wf-sr` ("se abre en una pestaña nueva") para lectores de
-  pantalla. `.wf-sr` es la clase de texto invisible pero anunciado.
-- **Las coordenadas del pin se cambiaron** de `-33.6889, -71.2153` a
-  `-33.688519, -71.216891` (las de la ficha oficial). Estaban a unos 150 m de
-  distancia, así que el pin y el botón apuntaban a puntos distintos.
-- **No se usó el iframe de Google Maps** (era opcional en el pedido): con iframe
-  se pierde el pin neón personalizado, porque no se puede dibujar encima de un
-  iframe de terceros. Se mantuvo Leaflet + Esri Dark, que ya funcionaba.
-
-## Cabecera de 2 pisos
-
-`<header>` fijo arriba con `z-index:1000`. Alto total ≈ **109px**.
-
-| Piso | Clase / etiqueta | Alto | Contenido |
-|------|------------------|------|-----------|
-| 1 · Datos | `.wf-topbar` | 32px | "Desde 2017 · Fibra óptica y enlaces inalámbricos en Melipilla y Paine" · horario · teléfono |
-| 2 · Navegación | `<nav>` dentro del header | 77px | Logo, ojo animado, Planes / Cobertura / La red, botón Contratar |
-
-- El `position:fixed` y el `z-index` viven ahora en el `<header>`, no en el `<nav>`.
-  El `<nav>` conserva su fondo con desenfoque.
-- **Si cambias el alto de la cabecera, ajusta también:**
-  1. `section[id] { scroll-margin-top: 112px }` — si no, las anclas quedan tapadas
-  2. `#cobertura` → `scroll-margin-top: 130px`
-  3. Relleno superior del hero → `clamp(124px,11vw,148px)`
-- Cortes responsivos: bajo 900px se oculta el texto de la izquierda; bajo 560px
-  se oculta también el horario y queda solo el teléfono.
-- El punto verde reutiliza el color `#34d399` del badge "en vivo".
-
-## Hero · Banner a pantalla completa
-
-La imagen ocupa **de lado a lado** (borde a borde) y todo el alto libre bajo la
-cabecera. El texto de la promoción va **sobrepuesto en la parte de abajo**.
-
-| Elemento | Clase | Función |
-|----------|-------|---------|
-| Escenario | `.wf-hero-stage` | `flex:1`, ocupa el alto libre |
-| Tarjeta | `.wf-promo-card` | Sin bordes ni esquinas redondeadas dentro del hero |
-| Imagen | `.wf-promo-media` | `flex:1`, alto mínimo `clamp(420px,62svh,680px)` |
-| Texto | `.wf-hero-caption` | Sobrepuesto abajo, contenido a 1240px centrado |
-| Puntos | `.wf-dots` | Abajo al centro; a la derecha desde 980px |
-
-- El velo `.wf-promo-card::after` se **oscureció abajo** (94% al pie) para que el
-  texto se lea sobre cualquier foto.
-- La misma clase `.wf-promo-card` se usa en el hero y (antes) en tarjeta chica.
-  Dentro del hero se anula el radio y los bordes con `.wf-hero-stage .wf-promo-card`.
-- Las clases `.wf-hero-grid` / `.wf-hero-left` / `.wf-hero-right` **ya no se usan**.
-
-## Franja de cobertura (buscador)
-
-**El buscador se sacó del hero** y ahora vive en su propia franja oscura, entre
-el hero y la sección Planes.
-
-- Conserva el `id="cobertura"`, así el enlace **COBERTURA del menú sigue
-  funcionando**. Verificado que al pulsarlo no queda tapado por la cabecera.
-- Se mantuvo el fondo oscuro porque el bloque está diseñado para eso: si se
-  mueve a una sección clara (como Contratar) el texto queda blanco sobre blanco.
-- El JS del verificador **no se tocó**: sigue usando `.wf-checkinput`,
-  `.wf-buscando`, `.wf-resultado` y el arreglo `COBERTURA`.
-
-## Hero · Split con carrusel de banners promocionales (versión anterior)
-
-**DÓNDE EDITAR LAS OFERTAS:** `index.html` → último `<script>` del archivo →
-arreglo **`promotionsList`**. Es el único lugar a tocar para cambiar promos.
-
-| Campo | Qué es |
-|-------|--------|
-| `id` | Número identificador |
-| `badge` | Texto del recuadro superior |
-| `title` | Titular principal |
-| `accent` | *(opcional)* trozo exacto del `title` que va en azul neón |
-| `description` | Texto breve bajo el titular |
-| `imageUrl` | Foto del banner de la derecha |
-| `alt` | Descripción de la foto para lectores de pantalla |
-
-Agregar o quitar promociones ajusta solo los bullets y la rotación.
-
-### Estructura del layout
-
-| Elemento | Clase / ID | Función |
-|----------|-----------|---------|
-| Rejilla | `.wf-hero-grid` | 1 columna en móvil, 2 desde 980px |
-| Columna izq. | `.wf-hero-left` | Texto rotativo + buscador **fijo** |
-| Columna der. | `.wf-hero-right` | Tarjeta del banner. `order:-1` en móvil |
-| Tarjeta | `.wf-promo-card` | Radio 16px, borde `rgba(255,255,255,.10)`, sombra neón |
-| Marco imagen | `.wf-promo-media` | `aspect-ratio` fijo (4/3 móvil, 5/4 escritorio) |
-| Imágenes | `.wf-promo-img` / `.is-active` | Fundido 500ms |
-| Textos | `.wf-slides` / `.wf-slide` | Grid apilado en celda `1/1` |
-| Bullets | `#wf-hero-dots` / `.wf-dot` | Dentro de la tarjeta, abajo |
-| Progreso | `@keyframes wf-dotfill` | **5s** lineal; su fin dispara el cambio |
-
-- **Móvil:** imagen arriba, luego titular y descripción, buscador abajo.
-- **Autoplay 5s.** No usa temporizador: lo dispara el `animationend` del bullet
-  activo, así bullet, texto e imagen nunca se desincronizan.
-- **OJO — no reiniciar la animación a mano en `go()`.** Al cambiar
-  `aria-current`, el CSS ya aplica una animación nueva desde cero. El truco de
-  `style.animation='none'` + reflow que había antes agregaba ~1s por ciclo
-  (medido: 6s en vez de 5s). Se quitó.
-- **Imágenes:** la 1ª va `fetchpriority="high"` porque se ve al entrar (mejora
-  el LCP); las demás van `loading="lazy"`. El `aspect-ratio` fijo evita que la
-  página salte mientras cargan.
-- **Pausas** (se acumulan): cursor sobre el texto o la tarjeta, foco dentro,
-  pestaña oculta, hero fuera de pantalla.
-- **Teclado:** flechas ← → sobre los bullets.
-- **Sin salto de maquetación:** textos e imágenes comparten celda de grid, así
-  la altura es la de la más alta. **Verificado: el buscador no se mueve (0 px)
-  al cambiar de promo.**
-- **NO SE TOCA:** `#cobertura` y las métricas del pie quedan fijas y fuera del
-  carrusel. Verificado que el buscador sigue funcionando igual.
-- El HTML trae la 1ª promo escrita como **respaldo si el JS no carga**.
-
-### Fotos (Unsplash)
-
-| Promo | Foto |
-|-------|------|
-| 1 · Internet + TV | `photo-1593784991095-a205069470b6` |
-| 2 · Alta velocidad | `photo-1542751371-adc38448a05e` |
-| 3 · Deportes | `photo-1522778119026-d647f0596c20` |
-
-- **La foto de deportes del brief original (`photo-1508098682722-e99c43a406b2`)
-  daba 404 en Unsplash.** Se reemplazó por un estadio de fútbol verificado.
-  Si agregas fotos nuevas, comprueba que la URL responda 200 antes de subirla.
-
-## Animaciones del esquema de red (WF-NODO-01)
-
-| Clase CSS | Nivel | Duración | Velocidad |
-|-----------|-------|----------|-----------|
-| `.wf-fiber` (base) | Backbone y troncal (L1/L2) | 0.8s | 17,5 u/s |
-| `.wf-fiber-l3` | Distribución (OLT→Splitters) | 0.65s | 21,5 u/s |
-| `.wf-fiber-l4` | Última milla (Splitters→Casas) | 0.5s | 28 u/s |
-| `.wf-ring-pulse` | Splitters | 2.8s | Pulso `transform: scale(1→5)` |
-
-- `@keyframes wf-flow`: anima `stroke-dashoffset` de 0 a **-14** = exactamente un período
-  de guiones (`6 8` y `5 9` ambos suman 14) → bucle sin salto visible.
-- **Por qué -14 y no -1000:** a -1000/2.5s el patrón avanzaba 47,6% del período por
-  fotograma a 60Hz, casi el límite de Nyquist → efecto rueda de carreta: en pantallas
-  de 60Hz se veía estático o tembloroso, en 120Hz+ se veía rápido. Ahora avanza
-  2,1–3,3% por fotograma (margen 14×), fluido en cualquier tasa de refresco.
-- `@keyframes wf-ring`: anima `transform: scale()` + `opacity` (GPU, Safari-safe).
-  Requiere `transform-box: fill-box` para centrar el origen en el círculo.
-- **Movimiento reducido:** hay 2 bloques `prefers-reduced-motion` — uno específico del
-  esquema (`.wf-fiber`, `.wf-ring-pulse` → `animation: none`) y el bloque global ya
-  existente de la página. No duplicar: reutilizar el global para animaciones nuevas.
+- ⚠️ **Los planes del Word están obsoletos.** Mandan los de la página: 400 / 650 /
+  940 Mbps. Ver [[Datos del negocio]].
+- ⚠️ **El zoom del mapa no debe pasar de 16.** Ver [[Mapa y contacto]].
+- ⚠️ **Nada de planes de hogar en la vista Empresas.** Ver [[Vista Empresas]].
+- ⚠️ **La imagen del hero va fuera del flujo**, si no rompe la portada.
+  Ver [[Animaciones]].

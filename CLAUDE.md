@@ -12,6 +12,12 @@
 ### REGLA #3: Reutilizar lo existente
 - Antes de crear algo nuevo, buscar si ya existe equivalente.
 
+### REGLA #4: Obsidian como red de notas
+- La bóveda `Wifired pagina/` es la memoria del proyecto. Usarla SIEMPRE.
+- Mantener una **red de notas enlazadas** con `[[wikilinks]]`, no un solo archivo.
+- `MEMORIA_ARQUITECTURA.md` es el índice y enlaza al resto.
+- Consultar el índice ANTES de buscar en el código; actualizar la nota del área al terminar.
+
 ## Idioma
 - Siempre español, simple, sin jerga, tono cercano.
 
