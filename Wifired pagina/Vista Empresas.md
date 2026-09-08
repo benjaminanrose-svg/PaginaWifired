@@ -17,9 +17,27 @@ Se activa con el botón **EMPRESAS** de la barra superior, o entrando directo a
 | 04 | Quiénes somos | `compromiso-emp` | Oscuro | Misión, visión y compromiso |
 | 04 | Cotizar | `contratar` *(compartida)* | Claro | Formulario de empresa + mapa |
 
-## Los 7 servicios (`.wf-ecard`)
+## Los 7 servicios (acordeón)
 
-Sacados textualmente del Word:
+Se muestran como **lista desplegable numerada**, no como tarjetas: se ve el
+título y al pulsar aparece la descripción. Solo uno abierto a la vez.
+
+| Pieza | Clase |
+|-------|-------|
+| Lista | `ul.wf-acc[data-acordeon]` |
+| Fila | `li.wf-acc-i` (`.is-open` cuando está abierta) |
+| Botón | `button.wf-acc-b` con `aria-expanded` |
+| Panel | `div.wf-acc-p` |
+
+- **La animación no mide alturas con JS:** el panel es un grid que pasa de
+  `0fr` a `1fr`. Por eso se abre suave sin importar cuánto texto tenga.
+- El signo **+** gira a **−** al abrir (la barra vertical rota y desaparece).
+- El script está al final del archivo y sirve para cualquier lista que lleve
+  `data-acordeon`: **no hay que duplicarlo** si quieres otro acordeón.
+- Se eligió acordeón en vez de baraja de cartas porque los 7 servicios caben
+  de un vistazo, se lee mejor en celular y no tapa contenido.
+
+Textos sacados del Word:
 
 1. **Enlaces de fibra dedicados** — conectividad exclusiva y simétrica
 2. **Enlaces microondas** — para sitios remotos, implementación rápida
