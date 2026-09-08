@@ -3,6 +3,7 @@
 | Módulo | Ruta/Vista | Archivo principal | Función/Propósito |
 |--------|-----------|-------------------|-------------------|
 | Landing page | `/` | `index.html` | Página única con toda la info: hero, planes, cobertura, contacto |
+| Cabecera | fija arriba | `index.html` `<header>` | 2 pisos: barra de datos + navegación |
 | Logo principal | — | `assets/logo.png` | Logo WiFired a color en blanco |
 | Favicon | — | `assets/favicon.png` | Ícono del navegador |
 | Apple touch icon | — | `assets/apple-touch-icon.png` | Ícono para iOS |
@@ -182,7 +183,57 @@ Un 200 con 256px puede ser una imagen de relleno.
   se pierde el pin neón personalizado, porque no se puede dibujar encima de un
   iframe de terceros. Se mantuvo Leaflet + Esri Dark, que ya funcionaba.
 
-## Hero · Split con carrusel de banners promocionales
+## Cabecera de 2 pisos
+
+`<header>` fijo arriba con `z-index:1000`. Alto total ≈ **109px**.
+
+| Piso | Clase / etiqueta | Alto | Contenido |
+|------|------------------|------|-----------|
+| 1 · Datos | `.wf-topbar` | 32px | "Desde 2017 · Fibra óptica y enlaces inalámbricos en Melipilla y Paine" · horario · teléfono |
+| 2 · Navegación | `<nav>` dentro del header | 77px | Logo, ojo animado, Planes / Cobertura / La red, botón Contratar |
+
+- El `position:fixed` y el `z-index` viven ahora en el `<header>`, no en el `<nav>`.
+  El `<nav>` conserva su fondo con desenfoque.
+- **Si cambias el alto de la cabecera, ajusta también:**
+  1. `section[id] { scroll-margin-top: 112px }` — si no, las anclas quedan tapadas
+  2. `#cobertura` → `scroll-margin-top: 130px`
+  3. Relleno superior del hero → `clamp(124px,11vw,148px)`
+- Cortes responsivos: bajo 900px se oculta el texto de la izquierda; bajo 560px
+  se oculta también el horario y queda solo el teléfono.
+- El punto verde reutiliza el color `#34d399` del badge "en vivo".
+
+## Hero · Banner a pantalla completa
+
+La imagen ocupa **de lado a lado** (borde a borde) y todo el alto libre bajo la
+cabecera. El texto de la promoción va **sobrepuesto en la parte de abajo**.
+
+| Elemento | Clase | Función |
+|----------|-------|---------|
+| Escenario | `.wf-hero-stage` | `flex:1`, ocupa el alto libre |
+| Tarjeta | `.wf-promo-card` | Sin bordes ni esquinas redondeadas dentro del hero |
+| Imagen | `.wf-promo-media` | `flex:1`, alto mínimo `clamp(420px,62svh,680px)` |
+| Texto | `.wf-hero-caption` | Sobrepuesto abajo, contenido a 1240px centrado |
+| Puntos | `.wf-dots` | Abajo al centro; a la derecha desde 980px |
+
+- El velo `.wf-promo-card::after` se **oscureció abajo** (94% al pie) para que el
+  texto se lea sobre cualquier foto.
+- La misma clase `.wf-promo-card` se usa en el hero y (antes) en tarjeta chica.
+  Dentro del hero se anula el radio y los bordes con `.wf-hero-stage .wf-promo-card`.
+- Las clases `.wf-hero-grid` / `.wf-hero-left` / `.wf-hero-right` **ya no se usan**.
+
+## Franja de cobertura (buscador)
+
+**El buscador se sacó del hero** y ahora vive en su propia franja oscura, entre
+el hero y la sección Planes.
+
+- Conserva el `id="cobertura"`, así el enlace **COBERTURA del menú sigue
+  funcionando**. Verificado que al pulsarlo no queda tapado por la cabecera.
+- Se mantuvo el fondo oscuro porque el bloque está diseñado para eso: si se
+  mueve a una sección clara (como Contratar) el texto queda blanco sobre blanco.
+- El JS del verificador **no se tocó**: sigue usando `.wf-checkinput`,
+  `.wf-buscando`, `.wf-resultado` y el arreglo `COBERTURA`.
+
+## Hero · Split con carrusel de banners promocionales (versión anterior)
 
 **DÓNDE EDITAR LAS OFERTAS:** `index.html` → último `<script>` del archivo →
 arreglo **`promotionsList`**. Es el único lugar a tocar para cambiar promos.

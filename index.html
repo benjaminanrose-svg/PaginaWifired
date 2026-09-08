@@ -446,7 +446,7 @@ textarea.input { min-height: 90px; resize: vertical; }
 .btn-primary { border-color: var(--color-accent); }
 .btn-ghost { border-color: transparent; }
 html { scroll-behavior: smooth; }
-section[id] { scroll-margin-top: 72px; }
+section[id] { scroll-margin-top: 112px; } /* alto de la cabecera de 2 pisos */
 body { margin: 0; text-wrap: pretty; font-size: 16px; background: #16222e; }
 a { color: var(--color-accent-300); }
 a:hover { color: var(--color-accent-200); }
@@ -454,6 +454,16 @@ a:hover { color: var(--color-accent-200); }
 .wf-navlink { color: color-mix(in srgb, #f2f2f3 80%, transparent); text-decoration: none; font-size: 13.5px; letter-spacing: 0.04em; text-transform: uppercase; padding: 6px 2px; transition: color .2s ease; }
 .wf-navlink:hover { color: var(--color-accent-300); }
 @media (max-width: 720px) { .wf-navlink { display: none; } }
+/* --- Cabecera de 2 pisos: barra de datos arriba, navegación abajo --- */
+.wf-topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 7px clamp(20px,5vw,64px); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; line-height: 1.5; color: color-mix(in srgb, #f2f2f3 52%, transparent); background: color-mix(in srgb, #0a1622 90%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid color-mix(in srgb, #f2f2f3 9%, transparent); }
+.wf-topbar b { font-weight: 600; color: color-mix(in srgb, #f2f2f3 76%, transparent); }
+.wf-topbar-sep { color: color-mix(in srgb, #f2f2f3 24%, transparent); }
+.wf-topbar-r { display: flex; align-items: center; gap: 18px; flex: none; }
+.wf-topbar a { color: inherit; text-decoration: none; transition: color .2s ease; }
+.wf-topbar a:hover, .wf-topbar a:focus-visible { color: var(--color-accent-300); }
+.wf-topbar-dot { width: 6px; height: 6px; flex: none; border-radius: 50%; background: #34d399; display: inline-block; margin-right: 7px; vertical-align: middle; }
+@media (max-width: 900px) { .wf-topbar-l { display: none; } .wf-topbar { justify-content: flex-end; } }
+@media (max-width: 560px) { .wf-topbar-horario { display: none; } }
 @keyframes wf-blink { 0%,100% { opacity: 1 } 50% { opacity: .2 } }
 @keyframes wf-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
 /* Esquema de red · un ciclo = exactamente un período de guiones (6+8 = 5+9 = 14) para bucle sin salto.
@@ -521,21 +531,19 @@ a:hover { color: var(--color-accent-200); }
 }
 /* --- Hero split · texto + buscador a la izquierda, banner promocional a la derecha.
        El contenido sale de promotionsList (ver script al final del archivo). --- */
-.wf-hero-grid { width: 100%; max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: clamp(28px,4vw,56px); align-items: center; }
-.wf-hero-left { display: flex; flex-direction: column; align-items: center; min-width: 0; width: 100%; }
-.wf-hero-right { order: -1; min-width: 0; width: 100%; } /* en móvil la imagen va arriba */
-@media (min-width: 980px) {
-  .wf-hero-grid { grid-template-columns: minmax(0,1.05fr) minmax(0,.95fr); text-align: left; }
-  .wf-hero-right { order: 0; }
-  .wf-hero-left, .wf-slide { align-items: flex-start; }
-  .wf-hero-sub { margin-left: 0; margin-right: 0; }
-}
+/* El hero ocupa todo el ancho y todo el alto libre bajo la cabecera */
+.wf-hero-stage { position: relative; z-index: 10; flex: 1; display: flex; width: 100%; min-width: 0; }
+.wf-hero-stage .wf-promo-card { flex: 1; display: flex; flex-direction: column; min-width: 0; border-radius: 0; border-left: 0; border-right: 0; border-top: 0; box-shadow: none; }
+.wf-hero-stage .wf-promo-media { flex: 1; aspect-ratio: auto; min-height: clamp(420px, 62svh, 680px); }
+/* Texto de la promoción sobrepuesto en la parte de abajo de la imagen */
+.wf-hero-caption { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; padding: clamp(28px,4vw,52px) clamp(20px,5vw,64px) clamp(60px,7vw,80px); }
+.wf-hero-caption > div { width: 100%; max-width: 1240px; margin: 0 auto; }
 .wf-slides { display: grid; width: 100%; }
-.wf-slide { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s ease; }
+.wf-slide { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: flex-start; text-align: left; opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s ease; }
 .wf-slide.is-active { opacity: 1; visibility: visible; }
 .wf-hero-badge { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; color: var(--color-accent-200); border: 1px solid color-mix(in srgb, var(--color-accent-200) 38%, transparent); padding: 7px 14px; margin-bottom: clamp(18px,2.4vw,26px); }
 .wf-hero-badge > i { width: 7px; height: 7px; background: var(--color-accent-300); display: inline-block; animation: wf-blink 1.8s ease-in-out infinite; }
-.wf-hero-sub { font-size: clamp(15.5px,1.5vw,18.5px); line-height: 1.6; max-width: 46ch; margin: clamp(18px,2.4vw,26px) auto 0; color: color-mix(in srgb, var(--color-bg) 76%, transparent); }
+.wf-hero-sub { font-size: clamp(15.5px,1.5vw,18.5px); line-height: 1.6; max-width: 46ch; margin: clamp(14px,2vw,20px) 0 0; color: color-mix(in srgb, var(--color-bg) 76%, transparent); }
 /* Tarjeta del banner promocional */
 .wf-promo-card { position: relative; margin: 0; border-radius: 16px; overflow: hidden; background: #0d1520; border: 1px solid rgba(255,255,255,.10); box-shadow: 0 18px 50px -12px rgba(0,0,0,.72), 0 0 34px -6px color-mix(in srgb, var(--color-accent-300) 22%, transparent); }
 .wf-promo-media { position: relative; display: grid; width: 100%; aspect-ratio: 4 / 3; background: #0d1520; }
@@ -543,9 +551,10 @@ a:hover { color: var(--color-accent-200); }
 .wf-promo-img { grid-area: 1 / 1; width: 100%; height: 100%; object-fit: cover; opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s ease; }
 .wf-promo-img.is-active { opacity: 1; visibility: visible; }
 /* Velo para que los puntos y el marco se lean sobre cualquier foto */
-.wf-promo-card::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to top, rgba(10,17,24,.88) 0%, rgba(10,17,24,.10) 46%, rgba(10,17,24,.30) 100%); }
+.wf-promo-card::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to top, rgba(10,17,24,.94) 0%, rgba(10,17,24,.82) 26%, rgba(10,17,24,.30) 62%, rgba(10,17,24,.55) 100%); }
 /* Puntos (bullets) en la base de la tarjeta */
-.wf-dots { position: absolute; z-index: 2; left: 0; right: 0; bottom: 16px; display: flex; gap: 9px; justify-content: center; }
+.wf-dots { position: absolute; z-index: 3; left: 0; right: 0; bottom: clamp(24px,3vw,34px); display: flex; gap: 9px; justify-content: center; }
+@media (min-width: 980px) { .wf-dots { justify-content: flex-end; padding-right: max(clamp(20px,5vw,64px), calc((100% - 1240px) / 2 + clamp(20px,5vw,64px))); } }
 .wf-dots[hidden] { display: none !important; }
 .wf-dot { height: 22px; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: center; }
 .wf-dot > span { position: relative; display: block; width: 9px; height: 9px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.34); transition: width .45s cubic-bezier(.22,.61,.36,1), background .3s ease; }
@@ -591,7 +600,19 @@ a:hover { color: var(--color-accent-200); }
 <div id="wf-root" style="position:relative; min-height:100%; overflow-x:hidden; background:#16222e; color:var(--color-bg)">
 <div id="wf-progress" aria-hidden="true"><span></span></div>
 
-<nav style="position:fixed; top:0; left:0; right:0; z-index:1000; display:flex; align-items:center; gap:18px; padding:14px clamp(20px,5vw,64px); background:color-mix(in srgb, var(--color-accent-900) 82%, transparent); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid color-mix(in srgb, var(--color-accent-300) 16%, transparent)">
+<header style="position:fixed; top:0; left:0; right:0; z-index:1000">
+
+  <!-- Piso 1 · datos de la empresa (sobrio, sin competir con la navegación) -->
+  <div class="wf-topbar">
+    <span class="wf-topbar-l"><b>Desde 2017</b> <span class="wf-topbar-sep">·</span> Fibra óptica y enlaces inalámbricos en Melipilla y Paine</span>
+    <span class="wf-topbar-r">
+      <span class="wf-topbar-horario"><span class="wf-topbar-dot" aria-hidden="true"></span>Lun a Sáb 9:00–18:00</span>
+      <a href="tel:+56989798503" style="font-variant-numeric:tabular-nums">+56 9 8979 8503</a>
+    </span>
+  </div>
+
+  <!-- Piso 2 · navegación principal -->
+  <nav style="display:flex; align-items:center; gap:18px; padding:14px clamp(20px,5vw,64px); background:color-mix(in srgb, var(--color-accent-900) 82%, transparent); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid color-mix(in srgb, var(--color-accent-300) 16%, transparent)">
     <div id="wf-eye" aria-hidden="true">
   <svg viewBox="0 0 100 100">
     <defs>
@@ -625,20 +646,23 @@ a:hover { color: var(--color-accent-200); }
     <a href="#red" class="wf-navlink">La red</a>
     <a class="btn btn-primary" href="#contratar" style="border-radius:0; min-height:42px; padding:0 20px; background:var(--color-accent-300); border-color:var(--color-accent-300); color:var(--color-accent-900); text-transform:uppercase; letter-spacing:.06em; font-size:13px">Contratar</a>
   </nav>
+</header>
 
 <section id="inicio" style="position:relative; min-height:100svh; display:flex; flex-direction:column; background:var(--color-accent-900); overflow:hidden; isolation:isolate">
   <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(to right, rgba(181,217,253,.05) 0 1px, transparent 1px 92px), repeating-linear-gradient(to bottom, rgba(181,217,253,.05) 0 1px, transparent 1px 92px)"></div>
   <canvas id="wf-net" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none" aria-hidden="true"></canvas>
   <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:radial-gradient(120% 90% at 50% 8%, transparent 40%, rgba(10,17,24,.55) 100%)"></div>
 
-  <div style="position:relative; z-index:10; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:clamp(96px,10vw,128px) clamp(20px,5vw,48px) clamp(40px,6vw,64px)">
-    <!-- Hero en 2 columnas. El texto y las imágenes los genera el script desde
-         promotionsList. Lo escrito abajo es el respaldo si el JavaScript no carga.
-         El buscador de cobertura NO rota: queda fijo y visible siempre. -->
-    <div class="wf-hero-grid">
-
-    <div class="wf-hero-left">
-    <div id="wf-hero-slider" class="wf-riser d1" style="width:100%" role="region" aria-roledescription="carrusel" aria-label="Promociones destacadas">
+  <!-- Hero a pantalla completa: la imagen va de lado a lado y el texto de la
+       promoción queda sobrepuesto abajo. El texto y las imágenes los genera el
+       script desde promotionsList; lo escrito acá es el respaldo si el JS no carga. -->
+  <div class="wf-hero-stage">
+    <figure class="wf-promo-card wf-riser d1">
+      <div class="wf-promo-media">
+        <img class="wf-promo-img is-active" src="https://images.unsplash.com/photo-1593784991095-a205069470b6?q=80&amp;w=1000&amp;auto=format&amp;fit=crop" alt="Promo Internet y TV" decoding="async" fetchpriority="high">
+      </div>
+      <div class="wf-hero-caption">
+        <div id="wf-hero-slider" style="width:100%" role="region" aria-roledescription="carrusel" aria-label="Promociones destacadas">
       <div class="wf-slides">
         <div class="wf-slide is-active">
           <span class="wf-hero-badge"><i></i>Promo Internet + TV</span>
@@ -647,43 +671,10 @@ a:hover { color: var(--color-accent-200); }
         </div>
       </div>
     </div>
-
-    <div id="cobertura" class="wf-riser d3" style="width:min(580px, 100%); margin-top:clamp(26px,3.4vw,38px); scroll-margin-top:90px">
-      <div class="wf-checkwrap" style="display:flex; align-items:stretch; border:1px solid color-mix(in srgb, var(--color-bg) 34%, transparent); background:color-mix(in srgb, #000 24%, transparent); backdrop-filter:blur(6px); transition:border-color .2s ease, box-shadow .2s ease">
-        <span aria-hidden="true" style="display:flex; align-items:center; padding-left:16px; color:var(--color-accent-300)">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-        </span>
-        <input class="wf-checkinput" type="text" value="" placeholder="Ingresa tu calle, villa o sector…" aria-label="Dirección o sector de Melipilla" style="flex:1; min-width:0; background:transparent; border:0; color:var(--color-bg); font-family:var(--font-body); font-size:16px; padding:17px 14px">
-        <button type="button" class="btn btn-primary" style="border-radius:0; padding:0 clamp(16px,2vw,24px); background:var(--color-accent-300); border-color:var(--color-accent-300); color:var(--color-accent-900); text-transform:uppercase; letter-spacing:.05em; font-size:13.5px; white-space:nowrap">Verificar</button>
-      </div>
-      <div style="min-height:26px; margin-top:12px; text-align:left">
-        <div class="wf-buscando" hidden>
-          <span style="display:inline-flex; align-items:center; gap:9px; font-size:13px; color:color-mix(in srgb, var(--color-bg) 66%, transparent)"><span style="width:7px; height:7px; background:var(--color-accent-300); display:inline-block; animation:wf-blink 1s ease-in-out infinite"></span>Consultando catastro de red…</span>
-        </div>
-        <div class="wf-resultado" hidden>
-          <div style="display:flex; gap:12px; align-items:flex-start; padding:14px 16px; border:1px solid var(--color-accent-300); background:color-mix(in srgb, var(--color-accent-300) 12%, transparent)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-300)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none; margin-top:2px"><path d="M20 6 9 17l-5-5"></path></svg>
-            <div>
-              <p style="font-family:var(--font-heading); font-weight:600; font-size:17px; line-height:1.2; text-transform:uppercase; letter-spacing:.02em; margin:0 0 4px; color:var(--color-bg)"><span class="wf-res-t"></span></p>
-              <p style="font-size:13.5px; line-height:1.5; margin:0; color:color-mix(in srgb, var(--color-bg) 72%, transparent)"><span class="wf-res-d"></span></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div><!-- /.wf-hero-left -->
-
-    <div class="wf-hero-right wf-riser d2">
-      <figure class="wf-promo-card">
-        <div class="wf-promo-media">
-          <img class="wf-promo-img is-active" src="https://images.unsplash.com/photo-1593784991095-a205069470b6?q=80&amp;w=1000&amp;auto=format&amp;fit=crop" alt="Promo Internet y TV" decoding="async" fetchpriority="high">
-        </div>
-        <div id="wf-hero-dots" class="wf-dots" role="group" aria-label="Elegir promoción"></div>
-      </figure>
-    </div>
-
-    </div><!-- /.wf-hero-grid -->
-  </div>
+      </div><!-- /.wf-hero-caption -->
+      <div id="wf-hero-dots" class="wf-dots" role="group" aria-label="Elegir promoción"></div>
+    </figure>
+  </div><!-- /.wf-hero-stage -->
 
   <div style="position:relative; z-index:10; border-top:1px solid color-mix(in srgb, var(--color-bg) 14%, transparent); background:rgba(0,0,0,.16)">
     <div style="max-width:1240px; margin:0 auto; padding:0 clamp(20px,5vw,64px); display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr))">
@@ -718,6 +709,40 @@ a:hover { color: var(--color-accent-200); }
     <div style="display:flex; align-items:center; gap:32px; padding:13px 16px; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:color-mix(in srgb, var(--color-bg) 56%, transparent); white-space:nowrap" aria-hidden="true"><span>Centro de Melipilla</span><span style="color:var(--color-accent-300)">+</span><span>Villa Los Aromos</span><span style="color:var(--color-accent-300)">+</span><span>Pomaire</span><span style="color:var(--color-accent-300)">+</span><span>Bollenar</span><span style="color:var(--color-accent-300)">+</span><span>Codigua</span><span style="color:var(--color-accent-300)">+</span><span>Culiprán</span><span style="color:var(--color-accent-300)">+</span><span>San Manuel</span><span style="color:var(--color-accent-300)">+</span><span>Mallarauco</span><span style="color:var(--color-accent-300)">+</span></div>
   </div>
 </div>
+
+<section style="position:relative; background:#132030; color:var(--color-bg); border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)">
+  <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(to right, rgba(181,217,253,.035) 0 1px, transparent 1px 92px), repeating-linear-gradient(to bottom, rgba(181,217,253,.035) 0 1px, transparent 1px 92px)"></div>
+  <div class="wf-2col" style="position:relative; max-width:1240px; margin:0 auto; padding:clamp(30px,4vw,48px) clamp(20px,5vw,64px); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(18px,3vw,44px); align-items:center">
+    <div>
+      <span style="display:inline-flex; align-items:center; gap:9px; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-300)"><span style="width:7px; height:7px; background:var(--color-accent-300); display:inline-block; animation:wf-blink 1.8s ease-in-out infinite"></span>Cobertura</span>
+      <h2 style="font-family:var(--font-heading); font-weight:600; font-size:clamp(22px,2.6vw,32px); line-height:1.06; text-transform:uppercase; letter-spacing:0.02em; margin:12px 0 0; color:var(--color-bg)">¿Ya llegó la fibra a tu calle?</h2>
+      <p style="font-size:14.5px; line-height:1.6; margin:10px 0 0; max-width:44ch; color:color-mix(in srgb, var(--color-bg) 72%, transparent)">Cobertura en Melipilla y Paine, en zona urbana y sectores rurales. Verifica tu dirección en segundos.</p>
+    </div>
+    <div id="cobertura" class="wf-riser d3" style="width:min(580px, 100%); scroll-margin-top:130px">
+      <div class="wf-checkwrap" style="display:flex; align-items:stretch; border:1px solid color-mix(in srgb, var(--color-bg) 34%, transparent); background:color-mix(in srgb, #000 24%, transparent); backdrop-filter:blur(6px); transition:border-color .2s ease, box-shadow .2s ease">
+        <span aria-hidden="true" style="display:flex; align-items:center; padding-left:16px; color:var(--color-accent-300)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        </span>
+        <input class="wf-checkinput" type="text" value="" placeholder="Ingresa tu calle, villa o sector…" aria-label="Dirección o sector de Melipilla" style="flex:1; min-width:0; background:transparent; border:0; color:var(--color-bg); font-family:var(--font-body); font-size:16px; padding:17px 14px">
+        <button type="button" class="btn btn-primary" style="border-radius:0; padding:0 clamp(16px,2vw,24px); background:var(--color-accent-300); border-color:var(--color-accent-300); color:var(--color-accent-900); text-transform:uppercase; letter-spacing:.05em; font-size:13.5px; white-space:nowrap">Verificar</button>
+      </div>
+      <div style="min-height:26px; margin-top:12px; text-align:left">
+        <div class="wf-buscando" hidden>
+          <span style="display:inline-flex; align-items:center; gap:9px; font-size:13px; color:color-mix(in srgb, var(--color-bg) 66%, transparent)"><span style="width:7px; height:7px; background:var(--color-accent-300); display:inline-block; animation:wf-blink 1s ease-in-out infinite"></span>Consultando catastro de red…</span>
+        </div>
+        <div class="wf-resultado" hidden>
+          <div style="display:flex; gap:12px; align-items:flex-start; padding:14px 16px; border:1px solid var(--color-accent-300); background:color-mix(in srgb, var(--color-accent-300) 12%, transparent)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-300)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none; margin-top:2px"><path d="M20 6 9 17l-5-5"></path></svg>
+            <div>
+              <p style="font-family:var(--font-heading); font-weight:600; font-size:17px; line-height:1.2; text-transform:uppercase; letter-spacing:.02em; margin:0 0 4px; color:var(--color-bg)"><span class="wf-res-t"></span></p>
+              <p style="font-size:13.5px; line-height:1.5; margin:0; color:color-mix(in srgb, var(--color-bg) 72%, transparent)"><span class="wf-res-d"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="planes" style="background:var(--color-bg); color:var(--color-text)">
   <div style="max-width:1240px; margin:0 auto; padding:clamp(64px,8vw,108px) clamp(20px,5vw,64px) clamp(40px,5vw,64px)">
