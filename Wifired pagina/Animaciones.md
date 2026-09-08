@@ -2,6 +2,32 @@
 
 Parte de [[MEMORIA_ARQUITECTURA]] · efectos de todo el sitio
 
+## El carrusel se usa DOS veces
+
+La función **`montarCarrusel(idSeccion, lista)`** monta un carrusel dentro de la
+sección que se le pase. Se llama dos veces al final del script:
+
+```
+montarCarrusel('inicio', promotionsList);         // portada Hogar
+montarCarrusel('inicio-emp', promotionsEmpresas); // portada Empresas
+```
+
+Cada portada marca sus piezas con **atributos, no con id**, para que la función
+las encuentre dentro de su propia sección:
+
+| Atributo | Va en |
+|----------|-------|
+| `data-carrusel-textos` | El div que contiene `.wf-slides` |
+| `data-carrusel-puntos` | El div de los puntos `.wf-dots` |
+| *(clase)* `.wf-promo-media` | El contenedor de las imágenes |
+
+⚠️ **Si agregas una portada nueva, no dupliques el script:** ponle esos
+atributos y agrega una llamada más a `montarCarrusel`.
+
+⚠️ **Al elegir fotos de Unsplash, MÍRALAS antes de usarlas.** Que la URL
+responda 200 no basta: la foto puede no existir (404) o ser una imagen de
+relleno. Ya pasó dos veces. Hay que descargarla y abrirla.
+
 ## Animaciones del esquema de red (WF-NODO-01)
 
 | Clase CSS | Nivel | Duración | Velocidad |

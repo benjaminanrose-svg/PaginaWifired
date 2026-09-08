@@ -9,7 +9,7 @@ Se activa con el botón **EMPRESAS** de la barra superior, o entrando directo a
 
 | # | Sección | id | Fondo | Qué muestra |
 |---|---------|-----|-------|-------------|
-| — | Portada | `inicio-emp` | Oscuro | "Conectividad crítica para tu empresa" + 4 cifras |
+| — | Portada | `inicio-emp` | Oscuro | Carrusel de 3 imágenes de oficina + 4 cifras |
 | — | Cobertura | *(compartida)* | Oscuro | Buscador. Texto propio: "Factibilidad para tu oficina" |
 | 01 | Servicios | `servicios-emp` | Claro | 7 tarjetas de servicio |
 | 02 | Red mayorista | `carrier-emp` | Oscuro | Carrier neutral: POP + Colocation |
@@ -28,6 +28,24 @@ Sacados textualmente del Word:
 5. **Virtualización** — entornos virtuales de servidores y almacenamiento
 6. **Cableado estructurado** — voz, datos y video
 7. **Soporte y mantención TIC** — monitoreo preventivo y correctivo
+
+## Portada de Empresas (carrusel)
+
+Misma estructura que la portada de Hogar: imagen de lado a lado, texto
+sobrepuesto abajo y puntos. Ver [[Animaciones]].
+
+**Para editar:** arreglo **`promotionsEmpresas`** en el último `<script>`.
+Mismos campos que `promotionsList` (badge, title, accent, description,
+imageUrl, alt).
+
+| # | Mensaje | Foto |
+|---|---------|------|
+| 1 | Conectividad crítica para tu empresa | Oficina abierta con equipo trabajando |
+| 2 | Toda tu operación sobre una sola red | Equipo con notebooks en una mesa |
+| 3 | Un operador que te contesta el teléfono | Dos personas en oficina |
+
+Las 3 fotos son de Unsplash y están **verificadas mirándolas**, no solo
+comprobando que la URL responda. Ver el aviso en [[Animaciones]].
 
 ## Formulario de empresa
 
