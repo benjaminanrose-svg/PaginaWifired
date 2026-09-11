@@ -72,7 +72,7 @@ En la vista Empresas el formulario **cambia por completo**:
 | | Hogar | Empresas |
 |---|-------|----------|
 | Campos | Nombre, Teléfono, Dirección | Nombre, Teléfono, **Empresa**, Dirección de sucursal, **Puestos o sedes** |
-| Elección | Plan (Básico/Medio/Full/Duo) | **Servicio** (7 opciones + carrier para ISP) |
+| Elección | **Acordeón con TODOS los planes** por categoría (ver [[Planes]]) | **Servicio** (7 opciones + carrier para ISP) |
 | Botón | "Solicitar instalación" | "Solicitar cotización" |
 
 ## ⚠️ Regla: nada de hogar en la vista Empresas

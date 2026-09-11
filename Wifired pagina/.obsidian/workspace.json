@@ -11,10 +11,14 @@
             "id": "14193cab1f9824d1",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Vista gráfica"
+              "type": "markdown",
+              "state": {
+                "file": "Vistas Hogar y Empresas.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Vistas Hogar y Empresas"
             }
           }
         ]
@@ -186,13 +190,19 @@
   },
   "active": "14193cab1f9824d1",
   "lastOpenFiles": [
-    "Vista Empresas.md.tmp.11852.48dc0706a28c",
-    "Animaciones.md.tmp.5716.86d8c7b5f558",
-    "Vista Empresas.md.tmp.5716.b48fe897fa47",
-    "MEMORIA_ARQUITECTURA.md",
-    "MEMORIA_ARQUITECTURA.md.tmp.12720.920ca45baebf",
-    "MEMORIA_ARQUITECTURA.md.tmp.12720.f55f3e4483f2",
-    "MEMORIA_ARQUITECTURA.md.tmp.12720.9fd24ac191b3",
-    "Bienvenido.md"
+    "Vistas Hogar y Empresas.md.tmp.19852.49b39dc7db24",
+    "MEMORIA_ARQUITECTURA.md.tmp.19852.90685eada181",
+    "Planes.md.tmp.19852.d7d36ef05e8e",
+    "Planes.md.tmp.19852.84516903a9c2",
+    "Planes.md.tmp.19852.4fe25c137c9e",
+    "Bienvenido.md",
+    "Vistas Hogar y Empresas.md.tmp.19852.036ea0e17907",
+    "Vistas Hogar y Empresas.md.tmp.19852.72bd3782ab12",
+    "MEMORIA_ARQUITECTURA.md.tmp.9696.1706ed511993",
+    "Planes.md.tmp.9696.4e1481fe67bb",
+    "Planes.md.tmp.9696.a695a4e613a5",
+    "Vistas Hogar y Empresas.md.tmp.9696.460cbddf20d5",
+    "Planes.md",
+    "MEMORIA_ARQUITECTURA.md"
   ]
 }

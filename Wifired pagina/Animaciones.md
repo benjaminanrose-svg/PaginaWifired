@@ -2,6 +2,33 @@
 
 Parte de [[MEMORIA_ARQUITECTURA]] · efectos de todo el sitio
 
+## Esquema de red WF-NODO-01 (coordenadas)
+
+SVG `viewBox="0 0 520 260"` en la sección `#red`. Recorrido:
+**Nube PIT → Central WiFired → OLT → Splitter principal 1:2 → Splitters 1 y 2 (1:8) → 6 casas**.
+
+| Pieza | Posición | Nota |
+|-------|----------|------|
+| Nube PIT | `translate(12,96) scale(2)` · centro x 36 | |
+| Central WiFired | grupo con `translate(-24,0)` · centro x 116 | Antes decía "Central Melipilla" |
+| OLT | rect x 172–218 · texto x 195 | |
+| Splitter principal | círculo (261,120) · etiqueta "SPLITTER 1:2" | Agregado a pedido |
+| Splitter 1 / 2 | (340,62) y (340,192) · "1:8" | |
+| Casas | x 448, en y 22/54/86 y 152/184/216 | |
+
+Tramos animados: L1 `M60→96`, L2 `M136→170`, L3 OLT→principal `M220→255` y
+principal→splitters (curvas desde x 267). La relación 1:2 del principal la puse yo
+porque reparte a exactamente dos splitters; confirmar si es otra.
+
+## Fondo de partículas de la portada (`#wf-net`, `initNet`)
+
+- ⚠️ **Se redibuja con `ResizeObserver` sobre el lienzo**, no solo con el evento
+  `resize` de la ventana. Antes, si la portada cambiaba de alto por otra causa, el
+  dibujo quedaba estirado y los brillos se veían como **manchas alargadas**.
+- `sincronizar()` solo reconstruye si el tamaño cambió más de 1px.
+- Con la portada oculta (vista Empresas) mide 0: `frame()` no dibuja y espera.
+- Con movimiento reducido pinta una vez en estático (`pintarEstatico`).
+
 ## El carrusel se usa DOS veces
 
 La función **`montarCarrusel(idSeccion, lista)`** monta un carrusel dentro de la

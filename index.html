@@ -446,7 +446,10 @@ textarea.input { min-height: 90px; resize: vertical; }
 .btn-primary { border-color: var(--color-accent); }
 .btn-ghost { border-color: transparent; }
 html { scroll-behavior: smooth; }
-section[id] { scroll-margin-top: 112px; } /* alto de la cabecera de 2 pisos */
+/* Los enlaces del menú dejan la sección justo bajo la cabecera. --wf-head lo mide
+   el script (alto de la cabecera ya sólida); 80px es solo el respaldo. */
+section[id] { scroll-margin-top: var(--wf-head, 80px); }
+.wf-medir, .wf-medir *, .wf-medir::before { transition: none !important; }
 body { margin: 0; text-wrap: pretty; font-size: 16px; background: #16222e; }
 a { color: var(--color-accent-300); }
 a:hover { color: var(--color-accent-200); }
@@ -454,17 +457,70 @@ a:hover { color: var(--color-accent-200); }
 .wf-navlink { color: color-mix(in srgb, #f2f2f3 80%, transparent); text-decoration: none; font-size: 13.5px; letter-spacing: 0.04em; text-transform: uppercase; padding: 6px 2px; transition: color .2s ease; }
 .wf-navlink:hover { color: var(--color-accent-300); }
 @media (max-width: 720px) { .wf-navlink { display: none; } }
-/* --- Cabecera de 2 pisos: barra de datos arriba, navegación abajo --- */
-.wf-topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 7px clamp(20px,5vw,64px); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; line-height: 1.5; color: color-mix(in srgb, #f2f2f3 52%, transparent); background: color-mix(in srgb, #0a1622 90%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid color-mix(in srgb, #f2f2f3 9%, transparent); }
-.wf-topbar b { font-weight: 600; color: color-mix(in srgb, #f2f2f3 76%, transparent); }
-.wf-topbar-sep { color: color-mix(in srgb, #f2f2f3 24%, transparent); }
-.wf-topbar-r { display: flex; align-items: center; gap: 18px; flex: none; }
-.wf-topbar a { color: inherit; text-decoration: none; transition: color .2s ease; }
-.wf-topbar a:hover, .wf-topbar a:focus-visible { color: var(--color-accent-300); }
-.wf-topbar-dot { width: 6px; height: 6px; flex: none; border-radius: 50%; background: #34d399; display: inline-block; margin-right: 7px; vertical-align: middle; }
-@media (max-width: 900px) { .wf-topbar-l { display: none; } }
+/* --- Cabecera flotante (estilo DGO): transparente sobre la portada, sólida al bajar.
+       El script agrega .is-solid al pasar 24px de scroll (ver onScroll). --- */
+.wf-header::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: calc(100% + 70px); z-index: -1; pointer-events: none; background: linear-gradient(to bottom, rgba(8,14,20,.8) 0%, rgba(8,14,20,.42) 55%, transparent 100%); transition: opacity .35s ease; }
+.wf-header.is-solid::before { opacity: 0; }
+.wf-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; padding: clamp(12px,1.6vw,18px) clamp(20px,5vw,64px); background: transparent; border-bottom: 1px solid transparent; transition: background .35s ease, border-color .35s ease, padding .35s ease; }
+.wf-header.is-solid .wf-nav { padding-top: 10px; padding-bottom: 10px; background: color-mix(in srgb, var(--color-accent-900) 86%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom-color: color-mix(in srgb, var(--color-accent-300) 16%, transparent); }
+.wf-brand { display: flex; align-items: center; gap: 16px; justify-self: start; min-width: 0; }
+.wf-logo { display: block; width: auto; max-width: none; object-fit: contain; height: clamp(54px,5.6vw,78px); filter: drop-shadow(0 2px 10px rgba(0,0,0,.35)); transition: height .35s cubic-bezier(.22,.61,.36,1); }
+.wf-header.is-solid .wf-logo { height: clamp(44px,3.8vw,54px); }
+.wf-navlinks { display: flex; align-items: center; gap: clamp(18px,2.4vw,34px); justify-self: center; }
+/* Contratar va dentro del menú central, como parte de la barra flotante */
+/* Sin fondo: solo borde y texto claro (estilo "Tengo cuenta" de DGO) */
+.wf-navbtn { border-radius: 0; min-height: 38px; padding: 0 18px; margin-left: clamp(4px,.8vw,12px); background: transparent; border: 1px solid color-mix(in srgb, #f2f2f3 55%, transparent); color: #f2f2f3; text-transform: uppercase; letter-spacing: .06em; font-size: 12.5px; transition: background .2s ease, border-color .2s ease, color .2s ease; }
+.wf-navbtn:hover, .wf-navbtn:focus-visible { background: color-mix(in srgb, #f2f2f3 10%, transparent); border-color: var(--color-accent-300); color: var(--color-accent-300); }
+/* En celular los enlaces de texto se ocultan (.wf-navlink) pero Contratar queda a la derecha */
+/* --- Menú: en escritorio el contenedor .wf-menu no existe (display:contents) y sus
+       hijos ocupan las columnas de la barra; en celular es un panel lateral --- */
+.wf-menu { display: contents; }
+.wf-menu:focus { outline: none; }
+.wf-menu-extra, .wf-burger, .wf-menu-bg { display: none; }
+.wf-lock { overflow: hidden; } /* bloquea el scroll de la página con el menú abierto */
+@media (max-width: 720px) {
+  .wf-nav { grid-template-columns: 1fr auto; }
+  /* Botón hamburguesa: 3 líneas que se vuelven X */
+  .wf-burger { display: inline-flex; position: relative; z-index: 3; flex-direction: column; justify-content: center; gap: 5px; width: 46px; height: 46px; padding: 0 11px; background: transparent; border: 1px solid color-mix(in srgb, #f2f2f3 40%, transparent); cursor: pointer; }
+  .wf-burger span { display: block; height: 1.5px; background: #f2f2f3; transition: transform .3s ease, opacity .2s ease; }
+  .wf-header.menu-open .wf-burger span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .wf-header.menu-open .wf-burger span:nth-child(2) { opacity: 0; }
+  .wf-header.menu-open .wf-burger span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+  /* Panel lateral */
+  .wf-menu { display: flex; flex-direction: column; gap: 22px; position: fixed; z-index: 2; top: 0; right: 0; bottom: 0; width: min(84vw, 340px); padding: 96px 26px 30px; overflow-y: auto; background: #0e1a26; border-left: 1px solid color-mix(in srgb, var(--color-accent-300) 18%, transparent); box-shadow: -18px 0 40px rgba(0,0,0,.45); transform: translateX(100%); visibility: hidden; transition: transform .35s cubic-bezier(.22,.61,.36,1), visibility .35s; }
+  .wf-header.menu-open .wf-menu { transform: none; visibility: visible; }
+  /* Sin esto, el desenfoque de la barra "encierra" al panel fijo dentro de ella */
+  .wf-header.menu-open .wf-nav { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .wf-menu-bg { display: block; position: fixed; inset: 0; z-index: 1; background: rgba(4,9,14,.62); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+  .wf-header.menu-open .wf-menu-bg { opacity: 1; pointer-events: auto; }
+  /* Contenido del panel: selector arriba, enlaces, Contratar y contacto al pie */
+  .wf-navseg { order: -1; }
+  .wf-segs { width: 100%; }
+  .wf-seg { flex: 1; padding: 12px 10px; }
+  .wf-navlinks { flex-direction: column; align-items: stretch; gap: 0; }
+  .wf-menu .wf-navlink { display: block; padding: 15px 2px; font-size: 16px; border-bottom: 1px solid color-mix(in srgb, #f2f2f3 10%, transparent); }
+  .wf-navbtn { margin: 18px 0 0; min-height: 48px; justify-content: center; }
+  .wf-menu-extra { display: flex; flex-direction: column; gap: 12px; margin-top: auto; padding-top: 20px; border-top: 1px solid color-mix(in srgb, #f2f2f3 10%, transparent); }
+  .wf-menu-t { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--color-accent-300); }
+  .wf-menu-extra a { color: #f2f2f3; text-decoration: none; font-size: 17px; font-variant-numeric: tabular-nums; }
+  .wf-menu-extra a small { display: block; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: color-mix(in srgb, #f2f2f3 55%, transparent); }
+  .wf-menu-h { font-size: 13px; color: color-mix(in srgb, #f2f2f3 60%, transparent); }
+  .wf-menu-extra a.wf-menu-legal { margin-top: 6px; font-size: 13px; color: color-mix(in srgb, #f2f2f3 70%, transparent); text-decoration: underline; text-underline-offset: 3px; }
+}
+/* --- Franja de cifras bajo las portadas (Hogar y Empresas): de lado a lado,
+       4 columnas iguales y cada dato centrado en su espacio --- */
+.wf-metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); width: 100%; }
+/* !important porque cada celda trae su relleno en línea desde el diseño original */
+.wf-metrics > div { padding: clamp(18px,2vw,26px) 12px !important; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.wf-metrics > div + div { border-left: 1px solid color-mix(in srgb, var(--color-bg) 14%, transparent); }
+@media (max-width: 640px) {
+  .wf-metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .wf-metrics > div:nth-child(3) { border-left: 0; }
+  .wf-metrics > div:nth-child(n+3) { border-top: 1px solid color-mix(in srgb, var(--color-bg) 14%, transparent); }
+}
 /* Selector Hogar | Empresas · divide la barra superior en dos */
-.wf-segs { display: flex; align-items: stretch; flex: none; margin: -7px 0; align-self: stretch; }
+.wf-navseg { justify-self: end; }
+.wf-segs { display: flex; align-items: stretch; flex: none; border: 1px solid color-mix(in srgb, #f2f2f3 20%, transparent); background: color-mix(in srgb, #0a1622 35%, transparent); }
 .wf-seg { position: relative; appearance: none; border: 0; background: none; cursor: pointer; padding: 10px 18px; font: inherit; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: color-mix(in srgb, #f2f2f3 46%, transparent); border-bottom: 2px solid transparent; transition: color .2s ease, background .2s ease, border-color .2s ease; }
 .wf-seg + .wf-seg { border-left: 1px solid color-mix(in srgb, #f2f2f3 12%, transparent); }
 .wf-seg:hover { color: color-mix(in srgb, #f2f2f3 82%, transparent); background: color-mix(in srgb, #f2f2f3 5%, transparent); }
@@ -494,6 +550,21 @@ a:hover { color: var(--color-accent-200); }
 .wf-acc-p p { margin: 0; font-size: 15px; line-height: 1.62; max-width: 64ch; color: var(--color-neutral-700); padding: 0 clamp(8px,1.2vw,16px) clamp(20px,2.4vw,26px) calc(2.6em + clamp(12px,1.6vw,22px) + clamp(8px,1.2vw,16px)); }
 @media (max-width: 600px) { .wf-acc-p p { padding-left: clamp(8px,1.2vw,16px); } }
 @media (prefers-reduced-motion: reduce) { .wf-acc-p { transition: none; } }
+/* Acordeón compacto dentro del formulario de contratación (planes por categoría) */
+.wf-acc--form { margin-top: 8px; }
+.wf-acc--form .wf-acc-b { grid-template-columns: 1.8em 1fr 14px; padding: 13px 10px; }
+.wf-acc--form .wf-acc-t { font-size: 16px; }
+.wf-acc--form .wf-acc-n { font-size: 11px; letter-spacing: .06em; }
+.wf-acc--form .wf-acc-x { width: 14px; height: 14px; }
+.wf-acc--form .wf-acc-x::before { width: 13px; }
+.wf-acc--form .wf-acc-x::after { height: 13px; }
+.wf-acc-radios { display: flex; flex-direction: column; gap: 11px; padding: 4px 10px 16px calc(1.8em + 24px); }
+@media (max-width: 480px) { .wf-acc-radios { padding-left: 14px; } }
+/* Las opciones de una categoría cerrada no se pueden alcanzar con Tab */
+.wf-acc--form .wf-acc-i:not(.is-open) .wf-acc-p > div { visibility: hidden; transition: visibility 0s .38s; }
+.wf-acc--form .wf-acc-i.is-open .wf-acc-p > div { visibility: visible; }
+/* La categoría del plan elegido lo avisa aunque esté cerrada */
+.wf-acc--form .wf-acc-i:has(input:checked) .wf-acc-t::after { content: "  ·  elegido"; font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: .1em; color: var(--color-accent-700); }
 .wf-elist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .wf-elist li { position: relative; padding-left: 22px; font-size: 14px; line-height: 1.5; color: color-mix(in srgb, var(--color-bg) 80%, transparent); }
 .wf-elist li::before { content: ""; position: absolute; left: 0; top: .5em; width: 9px; height: 1px; background: var(--color-accent-300); box-shadow: 0 0 6px color-mix(in srgb, var(--color-accent-300) 80%, transparent); }
@@ -504,8 +575,79 @@ a:hover { color: var(--color-accent-200); }
 .wf-mvc-i { position: relative; padding: clamp(22px,2.6vw,30px); background: rgba(0,0,0,.2); }
 .wf-mvc-i > span { display: block; font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--color-accent-300); margin-bottom: 12px; }
 .wf-mvc-i > p { font-size: 14.5px; line-height: 1.6; margin: 0; color: color-mix(in srgb, var(--color-bg) 80%, transparent); }
+/* --- Planes · internet por antena --- */
+.wf-antena { position: relative; display: grid; grid-template-columns: minmax(0,1.3fr) minmax(0,1fr) auto; gap: clamp(20px,3vw,40px); align-items: center; margin-top: 0; padding: clamp(24px,3vw,34px); }
+.wf-antena ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 14px; line-height: 1.4; color: var(--color-neutral-800); }
+.wf-antena li { display: flex; gap: 10px; }
+.wf-antena li > span { color: var(--color-accent); }
+@media (max-width: 860px) { .wf-antena { grid-template-columns: 1fr; } }
+/* --- Planes · tarjetas de referencia DGO (imitan las de DGO, con nuestro estilo) --- */
+/* Instalación · 3 pasos: en fila en escritorio, apilados en celular.
+   (Antes eran 3 columnas fijas en línea y en celular el texto se salía de la pantalla) */
+.wf-pasos { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); }
+@media (max-width: 720px) {
+  .wf-pasos { grid-template-columns: 1fr; }
+  /* !important porque cada paso trae su borde derecho en línea */
+  .wf-pasos > div { border-right: 0 !important; padding: 26px 22px !important; }
+  .wf-pasos > div + div { border-top: 1px solid var(--color-divider); }
+}
+/* Grilla de planes (internet y TV): 3 columnas en escritorio; en celular se desliza
+   de lado para no alargar la página. Reutiliza el carrusel [data-rail]. */
+.wf-plans { position: relative; }
+.wf-plangrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); gap: clamp(20px,2.6vw,32px); }
+.wf-plans[data-rail] > .wf-rail-btn { top: 50%; }
+@media (max-width: 720px) {
+  /* Relleno = scroll-padding (10px a los lados, 16px arriba/abajo) para no cortar
+     las esquinas + ni la cinta "Más elegido", y que la 1ª tarjeta encaje en 0 */
+  .wf-plangrid { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 10px; scrollbar-width: none; padding: 16px 10px; margin: -16px -10px; }
+  .wf-plangrid::-webkit-scrollbar { display: none; }
+  .wf-plangrid > * { flex: 0 0 86%; min-width: 0; scroll-snap-align: start; }
+}
+/* Carrusel horizontal: 4 tarjetas visibles en escritorio; si no caben, se desliza
+   con flechas o con el dedo. Nunca pasa a doble fila. */
+.wf-rail { position: relative; margin-top: 22px; }
+/* scroll-padding igual al relleno lateral: así la 1ª tarjeta encaja en scroll 0 y
+   la flecha "atrás" no aparece al inicio */
+.wf-dgo-grid { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 2px; scrollbar-width: none; padding: 8px 2px 14px; margin: -8px -2px -14px; }
+.wf-dgo-grid::-webkit-scrollbar { display: none; }
+.wf-dgo-grid > .wf-dgo { flex: 0 0 calc((100% - 54px) / 4); min-width: 252px; scroll-snap-align: start; }
+.wf-rail-btn { position: absolute; z-index: 3; top: 83px; transform: translateY(-50%); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; padding: 0; border: 1px solid color-mix(in srgb, var(--color-accent-300) 55%, transparent); background: var(--color-accent-900); color: var(--color-bg); cursor: pointer; box-shadow: 0 8px 22px rgba(0,0,0,.35); transition: background .2s ease; }
+.wf-rail-btn:hover { background: var(--color-accent-800); }
+.wf-rail-btn.is-prev { left: -14px; }
+.wf-rail-btn.is-next { right: -14px; }
+@media (max-width: 640px) {
+  .wf-dgo-grid > .wf-dgo { flex-basis: 82%; min-width: 0; }
+  .wf-rail-btn.is-prev { left: 4px; } .wf-rail-btn.is-next { right: 4px; }
+  /* 4 pestañas no caben en celular: el selector se desliza de lado */
+  .seg { align-self: stretch !important; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .seg-opt { flex: 1 0 auto; white-space: nowrap; padding: 0 14px !important; }
+}
+.wf-dgo { position: relative; display: flex; flex-direction: column; background: var(--color-bg); border: 1px solid var(--color-divider); transition: transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s ease; }
+.wf-dgo:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.wf-dgo-media { position: relative; height: 150px; overflow: hidden; background: var(--color-accent-900); }
+.wf-dgo-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.wf-dgo-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,17,24,.92) 0%, rgba(10,17,24,.45) 55%, rgba(10,17,24,.25) 100%); }
+.wf-dgo-tag { position: absolute; z-index: 1; left: 18px; bottom: 14px; right: 18px; color: #fff; }
+.wf-dgo-tag small { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--color-accent-300); }
+.wf-dgo-tag strong { display: block; font-family: var(--font-heading); font-weight: 600; font-size: clamp(26px,2.6vw,32px); line-height: .95; text-transform: uppercase; letter-spacing: .01em; margin-top: 3px; }
+.wf-dgo-body { flex: 1; display: flex; flex-direction: column; padding: 20px 20px 22px; }
+.wf-dgo-body h4 { font-family: var(--font-heading); font-weight: 600; font-size: 19px; text-transform: uppercase; letter-spacing: .02em; margin: 0; }
+.wf-dgo-pre { display: flex; align-items: center; gap: 8px; min-height: 22px; margin-top: 10px; font-size: 12px; color: var(--color-neutral-600); }
+.wf-dgo-pre s { color: var(--color-neutral-500); }
+.wf-dgo-badge { font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 3px 7px; color: var(--color-accent-900); background: var(--color-accent-300); }
+.wf-dgo-price { display: flex; align-items: baseline; gap: 6px; margin-top: 2px; }
+.wf-dgo-price b { font-family: var(--font-heading); font-weight: 600; font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; }
+.wf-dgo-price span { font-size: 12.5px; color: var(--color-neutral-600); }
+.wf-dgo-inc { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--color-divider); }
+.wf-dgo-inc > span { display: block; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 9px; }
+.wf-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.wf-chip { font-size: 11px; font-weight: 600; letter-spacing: .03em; padding: 4px 8px; border: 1px solid color-mix(in srgb, var(--color-accent-700) 30%, transparent); background: color-mix(in srgb, var(--color-accent-300) 14%, transparent); color: var(--color-accent-800); }
+.wf-dgo-list { list-style: none; margin: 16px 0 0; padding: 0; flex: 1; display: grid; align-content: start; gap: 9px; font-size: 13.5px; line-height: 1.4; color: var(--color-neutral-800); }
+.wf-dgo-list li { display: flex; gap: 9px; }
+.wf-dgo-list li > span { color: var(--color-accent); }
+.wf-dgo-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 12.5px; font-weight: 600; letter-spacing: .04em; color: var(--color-accent-700); text-decoration: none; }
+.wf-dgo-more:hover { color: var(--color-accent-900); text-decoration: underline; }
 .wf-ixp span { font-size: 13.5px; line-height: 1.45; color: var(--color-neutral-700); }
-@media (max-width: 560px) { .wf-topbar-horario { display: none; } }
 @keyframes wf-blink { 0%,100% { opacity: 1 } 50% { opacity: .2 } }
 @keyframes wf-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
 /* Esquema de red · un ciclo = exactamente un período de guiones (6+8 = 5+9 = 14) para bucle sin salto.
@@ -626,9 +768,6 @@ a:hover { color: var(--color-accent-200); }
 .wf-checkwrap:focus-within { border-color: var(--color-accent-300); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-300) 22%, transparent); }
 :focus-visible { outline: 2px solid var(--color-accent-300); outline-offset: 2px; }
 @media (max-width: 900px) { .wf-2col { grid-template-columns: 1fr !important; } }
-#wf-eye { flex: none; width: 38px; height: 38px; pointer-events: none; filter: drop-shadow(0 0 5px rgba(181,217,253,.35)); }
-#wf-eye svg { display: block; width: 100%; height: 100%; overflow: visible; }
-@media (max-width: 720px) { #wf-eye { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .wf-heroh1 .wf-ln > span, .wf-riser, .wf-armed, [data-reveal] > * { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
@@ -644,58 +783,43 @@ a:hover { color: var(--color-accent-200); }
 <div id="wf-root" style="position:relative; min-height:100%; overflow-x:hidden; background:#16222e; color:var(--color-bg)">
 <div id="wf-progress" aria-hidden="true"><span></span></div>
 
-<header style="position:fixed; top:0; left:0; right:0; z-index:1000">
+<header class="wf-header" style="position:fixed; top:0; left:0; right:0; z-index:1000">
 
-  <!-- Piso 1 · datos de la empresa (sobrio, sin competir con la navegación) -->
-  <div class="wf-topbar">
-    <div class="wf-segs" role="group" aria-label="Elegir tipo de cliente">
-      <button type="button" class="wf-seg is-on" data-seg-btn="hogar" aria-pressed="true">Hogar</button>
-      <button type="button" class="wf-seg" data-seg-btn="empresas" aria-pressed="false">Empresas</button>
+  <!-- Navegación: logo · menú central · selector Hogar/Empresas -->
+  <nav class="wf-nav">
+    <div class="wf-brand">
+    <img class="wf-logo" src="assets/logo.png" alt="WiFired Telecomunicaciones">
     </div>
-    <span class="wf-topbar-l"><b>Desde 2017</b> <span class="wf-topbar-sep">·</span> Melipilla y Paine</span>
-    <span class="wf-topbar-r">
-      <span class="wf-topbar-horario"><span class="wf-topbar-dot" aria-hidden="true"></span>Lun a Sáb 9:00–18:00</span>
-      <a href="tel:+56989798503" style="font-variant-numeric:tabular-nums">+56 9 8979 8503</a>
-    </span>
-  </div>
-
-  <!-- Piso 2 · navegación principal -->
-  <nav style="display:flex; align-items:center; gap:18px; padding:14px clamp(20px,5vw,64px); background:color-mix(in srgb, var(--color-accent-900) 82%, transparent); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid color-mix(in srgb, var(--color-accent-300) 16%, transparent)">
-    <div id="wf-eye" aria-hidden="true">
-  <svg viewBox="0 0 100 100">
-    <defs>
-      <radialGradient id="wf-iris-g" cx="50%" cy="50%" r="52%">
-        <stop offset="0%" stop-color="#f4f9ff"></stop>
-        <stop offset="26%" stop-color="#d3e8ff"></stop>
-        <stop offset="60%" stop-color="#6ea6da"></stop>
-        <stop offset="100%" stop-color="#22405b"></stop>
-      </radialGradient>
-      <radialGradient id="wf-glow-g" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="rgba(181,217,253,.5)"></stop>
-        <stop offset="100%" stop-color="rgba(181,217,253,0)"></stop>
-      </radialGradient>
-      <clipPath id="wf-eye-clip"><ellipse id="wf-ap" cx="50" cy="50" rx="47" ry="15"></ellipse></clipPath>
-    </defs>
-    <ellipse cx="50" cy="50" rx="53" ry="25" fill="url(#wf-glow-g)"></ellipse>
-    <g clip-path="url(#wf-eye-clip)">
-      <rect x="0" y="0" width="100" height="100" fill="#0a1622"></rect>
-      <g id="wf-gaze">
-        <circle cx="50" cy="50" r="21" fill="url(#wf-iris-g)"></circle>
-        <ellipse id="wf-pupil" cx="50" cy="50" rx="4.5" ry="19" fill="#08121d"></ellipse>
-        <circle cx="43" cy="42" r="2.6" fill="rgba(255,255,255,.85)"></circle>
-      </g>
-    </g>
-    <ellipse id="wf-lid" cx="50" cy="50" rx="47" ry="15" fill="none" stroke="#b5d9fd" stroke-width="2.2"></ellipse>
-  </svg>
-</div>
-    <img src="assets/logo.png" alt="WiFired Telecomunicaciones" style="display:block; height:48px; width:auto; max-width:none; object-fit:contain; margin-right:auto">
+    <!-- .wf-menu: en escritorio no existe para el diseño (display:contents);
+         en celular es el panel lateral que abre el botón hamburguesa -->
+    <div class="wf-menu" id="wf-menu" tabindex="-1">
+    <div class="wf-navlinks">
     <a href="#planes" class="wf-navlink" data-seg="hogar">Planes</a>
     <a href="#red" class="wf-navlink" data-seg="hogar">La red</a>
     <a href="#servicios-emp" class="wf-navlink" data-seg="empresas" hidden>Servicios</a>
     <a href="#carrier-emp" class="wf-navlink" data-seg="empresas" hidden>Red mayorista</a>
-    <a href="#cobertura" class="wf-navlink">Cobertura</a>
-    <a class="btn btn-primary" href="#contratar" style="border-radius:0; min-height:42px; padding:0 20px; background:var(--color-accent-300); border-color:var(--color-accent-300); color:var(--color-accent-900); text-transform:uppercase; letter-spacing:.06em; font-size:13px">Contratar</a>
+    <a href="#cobertura" class="wf-navlink" hidden>Cobertura</a><!-- oculto junto con la franja de cobertura -->
+    <a class="btn btn-primary wf-navbtn" href="#contratar">Contratar</a>
+    </div>
+    <div class="wf-navseg">
+      <div class="wf-segs" role="group" aria-label="Elegir tipo de cliente">
+        <button type="button" class="wf-seg is-on" data-seg-btn="hogar" aria-pressed="true">Hogar</button>
+        <button type="button" class="wf-seg" data-seg-btn="empresas" aria-pressed="false">Empresas</button>
+      </div>
+    </div>
+    <!-- Solo se ve dentro del menú lateral del celular -->
+    <div class="wf-menu-extra">
+      <span class="wf-menu-t">Contacto</span>
+      <a href="https://wa.me/56989798503" target="_blank" rel="noopener"><small>Melipilla</small>+56 9 8979 8503</a>
+      <a href="https://wa.me/56999967675" target="_blank" rel="noopener"><small>Paine</small>+56 9 9996 7675</a>
+      <span class="wf-menu-h">Lun a Sáb 9:00 – 18:00 hrs</span>
+      <!-- download: al tocar, el PDF se descarga directo en vez de abrirse -->
+      <a class="wf-menu-legal" href="assets/terminos-y-condiciones.pdf" download="Terminos-y-condiciones-WiFired.pdf">Términos y condiciones</a>
+    </div>
+    </div><!-- /wf-menu -->
+    <button type="button" class="wf-burger" aria-expanded="false" aria-controls="wf-menu" aria-label="Abrir menú"><span></span><span></span><span></span></button>
   </nav>
+  <div class="wf-menu-bg" aria-hidden="true"></div>
 </header>
 
 <section id="inicio" data-seg="hogar" style="position:relative; min-height:100svh; display:flex; flex-direction:column; background:var(--color-accent-900); overflow:hidden; isolation:isolate">
@@ -727,7 +851,7 @@ a:hover { color: var(--color-accent-200); }
   </div><!-- /.wf-hero-stage -->
 
   <div style="position:relative; z-index:10; border-top:1px solid color-mix(in srgb, var(--color-bg) 14%, transparent); background:rgba(0,0,0,.16)">
-    <div style="max-width:1240px; margin:0 auto; padding:0 clamp(20px,5vw,64px); display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr))">
+    <div class="wf-metrics">
       <div style="padding:20px 20px 20px 0">
         <p data-count="940" data-suffix=" Mbps" style="font-family:var(--font-heading); font-weight:600; font-size:clamp(26px,3vw,38px); line-height:1; margin:0 0 6px; color:var(--color-bg); font-variant-numeric:tabular-nums">940 Mbps</p>
         <span style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:color-mix(in srgb, var(--color-bg) 52%, transparent)">Plan Full simétrico</span>
@@ -779,7 +903,7 @@ a:hover { color: var(--color-accent-200); }
   </div>
 
   <div style="position:relative; z-index:10; border-top:1px solid color-mix(in srgb, var(--color-bg) 14%, transparent); background:rgba(0,0,0,.16)">
-    <div style="max-width:1240px; margin:0 auto; padding:0 clamp(20px,5vw,64px); display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr))">
+    <div class="wf-metrics">
       <div style="padding:20px 20px 20px 0">
         <p style="font-family:var(--font-heading); font-weight:600; font-size:clamp(26px,3vw,38px); line-height:1; margin:0 0 6px; color:var(--color-bg); font-variant-numeric:tabular-nums">2017</p>
         <span style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:color-mix(in srgb, var(--color-bg) 52%, transparent)">Operando desde</span>
@@ -807,7 +931,9 @@ a:hover { color: var(--color-accent-200); }
   </div>
 </div>
 
-<section style="position:relative; background:#132030; color:var(--color-bg); border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)">
+<!-- FRANJA DE COBERTURA · OCULTA a pedido: aún no se desarrolla. Para mostrarla,
+     quitar el atributo hidden de esta sección y del enlace "Cobertura" del menú. -->
+<section hidden style="position:relative; background:#132030; color:var(--color-bg); border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)">
   <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(to right, rgba(181,217,253,.035) 0 1px, transparent 1px 92px), repeating-linear-gradient(to bottom, rgba(181,217,253,.035) 0 1px, transparent 1px 92px)"></div>
   <div class="wf-2col" style="position:relative; max-width:1240px; margin:0 auto; padding:clamp(30px,4vw,48px) clamp(20px,5vw,64px); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(18px,3vw,44px); align-items:center">
     <div>
@@ -817,7 +943,7 @@ a:hover { color: var(--color-accent-200); }
       <p data-seg="hogar" style="font-size:14.5px; line-height:1.6; margin:10px 0 0; max-width:44ch; color:color-mix(in srgb, var(--color-bg) 72%, transparent)">Cobertura en Melipilla y Paine, en zona urbana y sectores rurales. Verifica tu dirección en segundos.</p>
       <p data-seg="empresas" hidden style="font-size:14.5px; line-height:1.6; margin:10px 0 0; max-width:46ch; color:color-mix(in srgb, var(--color-bg) 72%, transparent)">Cobertura en Melipilla y Paine. Si tu dirección queda fuera del alcance de la fibra, evaluamos un enlace microondas.</p>
     </div>
-    <div id="cobertura" class="wf-riser d3" style="width:min(580px, 100%); scroll-margin-top:130px">
+    <div id="cobertura" class="wf-riser d3" style="width:min(580px, 100%); scroll-margin-top:calc(var(--wf-head, 80px) + 18px)">
       <div class="wf-checkwrap" style="display:flex; align-items:stretch; border:1px solid color-mix(in srgb, var(--color-bg) 34%, transparent); background:color-mix(in srgb, #000 24%, transparent); backdrop-filter:blur(6px); transition:border-color .2s ease, box-shadow .2s ease">
         <span aria-hidden="true" style="display:flex; align-items:center; padding-left:16px; color:var(--color-accent-300)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -853,11 +979,15 @@ a:hover { color: var(--color-accent-200); }
       <div class="seg" style="align-self:flex-end">
         <label class="seg-opt" style="min-height:46px; padding:0 20px; font-size:14px"><input type="radio" name="wf-tab" checked data-tab="internet">Solo internet</label>
         <label class="seg-opt" style="min-height:46px; padding:0 20px; font-size:14px"><input type="radio" name="wf-tab" data-tab="tv">Internet + TV</label>
+        <label class="seg-opt" style="min-height:46px; padding:0 20px; font-size:14px"><input type="radio" name="wf-tab" data-tab="antena">Antena</label>
+        <label class="seg-opt" style="min-height:46px; padding:0 20px; font-size:14px"><input type="radio" name="wf-tab" data-tab="dgo">DGO</label>
       </div>
     </div>
 
-    <div class="wf-plans" data-plan="internet">
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(268px, 1fr)); gap:clamp(20px,2.6vw,32px)">
+    <div class="wf-plans" data-plan="internet" data-rail>
+      <button type="button" class="wf-rail-btn is-prev" data-rail-prev aria-label="Ver planes anteriores" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+      <button type="button" class="wf-rail-btn is-next" data-rail-next aria-label="Ver más planes" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+      <div class="wf-plangrid" data-rail-track>
         <div class="blueprint wf-lift" style="padding:30px; display:flex; flex-direction:column; transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s ease">
           <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
           <span style="font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-neutral-600)">Banda ancha</span>
@@ -907,8 +1037,10 @@ a:hover { color: var(--color-accent-200); }
       </div>
     </div>
 
-    <div class="wf-plans" data-plan="tv" hidden>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(268px, 1fr)); gap:clamp(20px,2.6vw,32px)">
+    <div class="wf-plans" data-plan="tv" hidden data-rail>
+      <button type="button" class="wf-rail-btn is-prev" data-rail-prev aria-label="Ver planes anteriores" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+      <button type="button" class="wf-rail-btn is-next" data-rail-next aria-label="Ver más planes" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+      <div class="wf-plangrid" data-rail-track>
         <div class="blueprint wf-lift" style="padding:30px; display:flex; flex-direction:column; transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s ease">
           <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
           <span style="font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-neutral-600)">Internet + TV</span>
@@ -958,10 +1090,102 @@ a:hover { color: var(--color-accent-200); }
       </div>
     </div>
 
-    <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:18px; margin-top:34px; padding:20px 24px; border:1px solid var(--color-divider); background:var(--color-accent-100)">
-      <p style="margin:0; font-size:14px; line-height:1.55; max-width:64ch; color:var(--color-accent-900)"><strong style="font-weight:700">¿Internet para tu empresa?</strong> Dimensionamos enlace, capacidad y SLA según el rubro y la cantidad de puestos. Cotización en 24 horas.</p>
-      <a class="btn btn-primary" href="#contratar" style="min-height:44px; white-space:nowrap; border-radius:0">Pedir cotización</a>
+    <!-- Pestaña ANTENA · internet para sectores donde aún no llega la fibra (ver nota Planes en Obsidian) -->
+    <div class="wf-plans" data-plan="antena" hidden>
+    <div class="blueprint wf-antena">
+      <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div>
+        <span style="font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-neutral-600)">Inalámbrico</span>
+        <h3 style="font-family:var(--font-heading); font-weight:600; font-size:26px; text-transform:uppercase; letter-spacing:0.02em; margin:9px 0 0">Internet por antena</h3>
+        <p style="font-size:14.5px; line-height:1.6; margin:10px 0 0; max-width:46ch; color:var(--color-neutral-700)">Internet sin cables, ideal para sectores donde todavía no llega la fibra óptica. Instalación rápida y cobertura confiable.</p>
+      </div>
+      <ul>
+        <li><span>—</span>Para sectores sin fibra óptica</li>
+        <li><span>—</span>Instalación rápida, sin tendido de cable</li>
+        <li><span>—</span>Melipilla, Paine y localidades cercanas</li>
+      </ul>
+      <div style="display:flex; flex-direction:column; gap:10px; align-items:flex-start">
+        <span style="font-size:12.5px; color:var(--color-neutral-600)">Precio según factibilidad</span>
+        <a class="btn btn-secondary" href="#contratar" style="min-height:46px; border-radius:0; white-space:nowrap">Consultar</a>
+      </div>
     </div>
+
+    </div><!-- /pestaña antena -->
+
+    <!-- Pestaña DGO · tarjetas de referencia (imitan las de DGO con el estilo de WiFired) -->
+    <div class="wf-plans" data-plan="dgo" hidden>
+    <div>
+      <div style="display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:14px">
+        <div>
+          <span style="display:block; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">Televisión por streaming</span>
+          <h3 style="font-family:var(--font-heading); font-weight:600; font-size:clamp(26px,3vw,36px); line-height:1.04; text-transform:uppercase; letter-spacing:0.02em; margin:10px 0 0">Suma DGO a tu plan</h3>
+        </div>
+        <p style="margin:0; font-size:12.5px; line-height:1.5; max-width:40ch; color:var(--color-neutral-600)">Precios referenciales publicados por DGO, sujetos a cambio.</p>
+      </div>
+      <!-- Carrusel: si las tarjetas no caben, se pasan con las flechas (script "CARRUSEL HORIZONTAL") -->
+      <div class="wf-rail" data-rail>
+      <button type="button" class="wf-rail-btn is-prev" data-rail-prev aria-label="Ver planes anteriores" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+      <button type="button" class="wf-rail-btn is-next" data-rail-next aria-label="Ver más planes" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+      <div class="wf-dgo-grid" data-rail-track>
+
+        <article class="wf-dgo">
+          <div class="wf-dgo-media"><img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=70&amp;w=600&amp;auto=format&amp;fit=crop" alt="" loading="lazy" decoding="async"><div class="wf-dgo-tag"><small>DGO · Plan</small><strong>Lite + DSports</strong></div></div>
+          <div class="wf-dgo-body">
+            <h4>Plan Lite + DSports</h4>
+            <div class="wf-dgo-pre">Solo</div>
+            <div class="wf-dgo-price"><b>$7.200</b><span>/ mes</span></div>
+            <a class="btn btn-primary btn-block" href="#contratar" style="min-height:44px; margin-top:16px; border-radius:0">Contratar</a>
+            <div class="wf-dgo-inc"><span>Incluido</span><div class="wf-chips"><span class="wf-chip">DSports</span></div></div>
+            <ul class="wf-dgo-list"><li><span>—</span>Partidos de la Copa Sudamericana</li><li><span>—</span>Estrenos de series y películas</li><li><span>—</span>LaLiga EA y otras ligas europeas</li></ul>
+            <a class="wf-dgo-more" href="https://www.directvgo.com/cl/home" target="_blank" rel="noopener noreferrer">Detalles del plan ↗</a>
+          </div>
+        </article>
+
+        <article class="wf-dgo">
+          <div class="wf-dgo-media"><img src="https://images.unsplash.com/photo-1593784991095-a205069470b6?q=70&amp;w=600&amp;auto=format&amp;fit=crop" alt="" loading="lazy" decoding="async"><div class="wf-dgo-tag"><small>DGO · Plan</small><strong>Streaming</strong></div></div>
+          <div class="wf-dgo-body">
+            <h4>Plan Streaming</h4>
+            <div class="wf-dgo-pre">Solo</div>
+            <div class="wf-dgo-price"><b>$22.900</b><span>/ mes</span></div>
+            <a class="btn btn-primary btn-block" href="#contratar" style="min-height:44px; margin-top:16px; border-radius:0">Contratar</a>
+            <div class="wf-dgo-inc"><span>Incluido</span><div class="wf-chips"><span class="wf-chip">DSports</span><span class="wf-chip">Amazon Prime</span><span class="wf-chip">Disney+</span><span class="wf-chip">HBO Max</span><span class="wf-chip">+2</span></div></div>
+            <ul class="wf-dgo-list"><li><span>—</span>Copa Sudamericana y Libertadores</li><li><span>—</span>Estrenos de series y películas</li><li><span>—</span>LaLiga EA y otras ligas europeas</li></ul>
+            <a class="wf-dgo-more" href="https://www.directvgo.com/cl/home" target="_blank" rel="noopener noreferrer">Detalles del plan ↗</a>
+          </div>
+        </article>
+
+        <article class="wf-dgo">
+          <div class="wf-dgo-media"><img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=70&amp;w=600&amp;auto=format&amp;fit=crop" alt="" loading="lazy" decoding="async"><div class="wf-dgo-tag"><small>DGO · Plan</small><strong>Fútbol</strong></div></div>
+          <div class="wf-dgo-body">
+            <h4>Plan Fútbol</h4>
+            <div class="wf-dgo-pre"><s>$21.300</s><span class="wf-dgo-badge">Descuento por 4 meses</span></div>
+            <div class="wf-dgo-price"><b>$18.900</b><span>/ mes</span></div>
+            <a class="btn btn-primary btn-block" href="#contratar" style="min-height:44px; margin-top:16px; border-radius:0">Contratar</a>
+            <div class="wf-dgo-inc"><span>Incluido</span><div class="wf-chips"><span class="wf-chip">DSports</span><span class="wf-chip">Amazon Prime</span><span class="wf-chip">TNT Sports</span><span class="wf-chip">NFL Game Pass</span></div></div>
+            <ul class="wf-dgo-list"><li><span>—</span>Toda la Liga de Primera</li><li><span>—</span>Toda la Copa Chile</li><li><span>—</span>Partidos de Copa Sudamericana</li></ul>
+            <a class="wf-dgo-more" href="https://www.directvgo.com/cl/home" target="_blank" rel="noopener noreferrer">Detalles del plan ↗</a>
+          </div>
+        </article>
+
+        <article class="wf-dgo">
+          <div class="wf-dgo-media"><img src="https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?q=70&amp;w=600&amp;auto=format&amp;fit=crop" alt="" loading="lazy" decoding="async"><div class="wf-dgo-tag"><small>DGO · Plan</small><strong>Fútbol Total</strong></div></div>
+          <div class="wf-dgo-body">
+            <h4>Plan Fútbol Total</h4>
+            <div class="wf-dgo-pre"><s>$23.900</s><span class="wf-dgo-badge">Descuento por 4 meses</span></div>
+            <div class="wf-dgo-price"><b>$21.900</b><span>/ mes</span></div>
+            <a class="btn btn-primary btn-block" href="#contratar" style="min-height:44px; margin-top:16px; border-radius:0">Contratar</a>
+            <div class="wf-dgo-inc"><span>Incluido</span><div class="wf-chips"><span class="wf-chip">DSports</span><span class="wf-chip">Amazon Prime</span><span class="wf-chip">TNT Sports</span><span class="wf-chip">NFL Game Pass</span></div></div>
+            <ul class="wf-dgo-list"><li><span>—</span>Toda la Liga de Primera</li><li><span>—</span>Toda la Copa Chile</li><li><span>—</span>Copa Sudamericana y Libertadores</li></ul>
+            <a class="wf-dgo-more" href="https://www.directvgo.com/cl/home" target="_blank" rel="noopener noreferrer">Detalles del plan ↗</a>
+          </div>
+        </article>
+
+      </div>
+      </div><!-- /wf-rail -->
+    </div>
+
+    </div><!-- /pestaña dgo -->
+
   </div>
 </section>
 
@@ -981,13 +1205,14 @@ a:hover { color: var(--color-accent-200); }
     <figure class="blueprint wf-armed" style="margin:0; padding:28px; background:rgba(0,0,0,.18); position:relative; overflow:hidden">
       <i class="corner tl" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i><i class="corner tr" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i><i class="corner bl" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i><i class="corner br" style="color:color-mix(in srgb, var(--color-bg) 45%, transparent)"></i>
       <span style="display:block; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-accent-300); margin-bottom:16px">Esquema de red · WF-NODO-01</span>
-      <svg viewBox="0 0 520 260" style="width:100%; height:auto; display:block" aria-label="Esquema de red: data center PIT, central Melipilla, OLT y dos splitters 1:8 en paralelo, cada uno derivando a tres hogares">
+      <svg viewBox="0 0 520 260" style="width:100%; height:auto; display:block" aria-label="Esquema de red: data center PIT, Central WiFired, OLT, splitter principal 1:2 y dos splitters 1:8 en paralelo, cada uno derivando a tres hogares">
         <!-- Fibra · enlaces principales (L1=backbone, L2=troncal, L3=distribución, L4=última milla) -->
         <g stroke="var(--color-accent-300)" fill="none" stroke-width="1.1">
-          <path class="wf-fiber wf-fiber-l1" d="M68 120 H120" stroke-dasharray="6 8"></path>
-          <path class="wf-fiber wf-fiber-l2" d="M160 120 H207" stroke-dasharray="6 8"></path>
-          <path class="wf-fiber wf-fiber-l3" d="M257 120 C285 120, 310 62, 334 62" stroke-dasharray="6 8"></path>
-          <path class="wf-fiber wf-fiber-l3" d="M257 120 C285 120, 310 192, 334 192" stroke-dasharray="6 8"></path>
+          <path class="wf-fiber wf-fiber-l1" d="M60 120 H96" stroke-dasharray="6 8"></path>
+          <path class="wf-fiber wf-fiber-l2" d="M136 120 H170" stroke-dasharray="6 8"></path>
+          <path class="wf-fiber wf-fiber-l3" d="M220 120 H255" stroke-dasharray="6 8"></path>
+          <path class="wf-fiber wf-fiber-l3" d="M267 120 C291 120, 312 62, 334 62" stroke-dasharray="6 8"></path>
+          <path class="wf-fiber wf-fiber-l3" d="M267 120 C291 120, 312 192, 334 192" stroke-dasharray="6 8"></path>
           <path class="wf-fiber wf-fiber-l4" d="M346 62 C375 62, 420 30, 448 30" stroke-dasharray="5 9"></path>
           <path class="wf-fiber wf-fiber-l4" d="M346 62 H448" stroke-dasharray="5 9"></path>
           <path class="wf-fiber wf-fiber-l4" d="M346 62 C375 62, 420 94, 448 94" stroke-dasharray="5 9"></path>
@@ -1002,10 +1227,10 @@ a:hover { color: var(--color-accent-200); }
         </g>
         <!-- Nube · Data Center PIT -->
         <g fill="none" stroke="var(--color-bg)" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round">
-          <g transform="translate(20,96) scale(2)"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></g>
+          <g transform="translate(12,96) scale(2)"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></g>
         </g>
-        <!-- Central Melipilla -->
-        <g fill="none" stroke="var(--color-bg)" stroke-width="1.2" stroke-linejoin="round">
+        <!-- Central WiFired -->
+        <g transform="translate(-24,0)" fill="none" stroke="var(--color-bg)" stroke-width="1.2" stroke-linejoin="round">
           <rect x="124" y="102" width="32" height="40"></rect>
           <path d="M140 102 V89"></path>
           <circle cx="140" cy="87" r="1.7" fill="var(--color-bg)" stroke="none"></circle>
@@ -1014,8 +1239,9 @@ a:hover { color: var(--color-accent-200); }
           <rect x="135" y="133" width="10" height="9"></rect>
         </g>
         <!-- OLT -->
-        <rect x="209" y="96" width="46" height="48" fill="none" stroke="var(--color-bg)" stroke-width="1.2"></rect>
-        <text x="232" y="125" text-anchor="middle" fill="var(--color-bg)" font-family="Barlow Condensed, sans-serif" font-size="15" letter-spacing="1">OLT</text>
+        <rect x="172" y="96" width="46" height="48" fill="none" stroke="var(--color-bg)" stroke-width="1.2"></rect>
+        <text x="195" y="125" text-anchor="middle" fill="var(--color-bg)" font-family="Barlow Condensed, sans-serif" font-size="15" letter-spacing="1">OLT</text>
+        <!-- Splitter principal 1:2 · de aquí salen los splitters 1 y 2 --><g><circle cx="261" cy="120" r="6" fill="var(--color-accent-300)"></circle><circle class="wf-ring-pulse" cx="261" cy="120" r="6" fill="none" stroke="var(--color-accent-300)" style="animation-delay:.2s"></circle></g>
         <!-- Splitter 1 · 1:8 -->
         <g><circle cx="340" cy="62" r="6" fill="var(--color-accent-300)"></circle><circle class="wf-ring-pulse" cx="340" cy="62" r="6" fill="none" stroke="var(--color-accent-300)"></circle></g>
         <!-- Splitter 2 · 1:8 -->
@@ -1034,10 +1260,11 @@ a:hover { color: var(--color-accent-200); }
         </g>
         <!-- Etiquetas -->
         <g text-anchor="middle" font-family="Barlow, sans-serif" font-size="8.5" letter-spacing="1" fill="color-mix(in srgb, var(--color-bg) 62%, transparent)">
-          <text x="44" y="159">DATA CENTER</text>
-          <text x="44" y="169">PIT</text>
-          <text x="140" y="159">CENTRAL</text>
-          <text x="140" y="169">MELIPILLA</text>
+          <text x="36" y="159">DATA CENTER</text>
+          <text x="36" y="169">PIT</text>
+          <text x="116" y="159">CENTRAL</text>
+          <text x="116" y="169">WIFIRED</text>
+          <text x="261" y="159">SPLITTER</text>
           <text x="340" y="112">SPLITTER 1</text>
           <text x="340" y="242">SPLITTER 2</text>
           <text x="463" y="133">CLIENTES</text>
@@ -1045,6 +1272,7 @@ a:hover { color: var(--color-accent-200); }
         <g text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-size="9.5" letter-spacing="1.5" fill="var(--color-accent-300)">
           <text x="340" y="122">1:8</text>
           <text x="340" y="252">1:8</text>
+          <text x="261" y="169">1:2</text>
         </g>
       </svg>
     </figure>
@@ -1088,7 +1316,7 @@ a:hover { color: var(--color-accent-200); }
       <span style="display:block; font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">04 — Instalación</span>
       <h2 style="font-family:var(--font-heading); font-weight:600; font-size:clamp(30px,3.8vw,48px); line-height:1.02; text-transform:uppercase; letter-spacing:0.02em; margin:14px 0 0">Del sí a la conexión<br>en 48 horas</h2>
     </div>
-    <div class="blueprint" data-reveal="" style="display:grid; grid-template-columns:repeat(3,1fr); background:var(--color-bg)">
+    <div class="blueprint wf-pasos" data-reveal="" style="background:var(--color-bg)">
       <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
       <div style="padding:30px 28px; border-right:1px solid var(--color-divider)">
         <span style="display:block; font-family:var(--font-heading); font-weight:600; font-size:13px; letter-spacing:0.14em; color:var(--color-accent-700); margin-bottom:16px">PASO 01</span>
@@ -1302,7 +1530,11 @@ a:hover { color: var(--color-accent-200); }
       <div style="display:grid; margin-top:32px; border-top:1px solid var(--color-divider)">
         <a href="https://wa.me/56989798503" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:14px; padding:18px 0; border-bottom:1px solid var(--color-divider); text-decoration:none; color:var(--color-text)">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-700); flex:none"><path d="M21 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 3.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"></path></svg>
-          <span><span style="display:block; font-family:var(--font-heading); font-weight:600; font-size:20px; letter-spacing:0.02em; font-variant-numeric:tabular-nums">+56 9 8979 8503</span><span style="display:block; font-size:13px; color:var(--color-neutral-600)">WhatsApp y llamadas · también +56 9 9996 7675</span></span>
+          <span><span style="display:block; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">Melipilla</span><span style="display:block; font-family:var(--font-heading); font-weight:600; font-size:20px; letter-spacing:0.02em; font-variant-numeric:tabular-nums">+56 9 8979 8503</span><span style="display:block; font-size:13px; color:var(--color-neutral-600)">WhatsApp y llamadas</span></span>
+        </a>
+        <a href="https://wa.me/56999967675" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:14px; padding:18px 0; border-bottom:1px solid var(--color-divider); text-decoration:none; color:var(--color-text)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-700); flex:none"><path d="M21 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 3.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"></path></svg>
+          <span><span style="display:block; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; color:var(--color-accent-700)">Paine</span><span style="display:block; font-family:var(--font-heading); font-weight:600; font-size:20px; letter-spacing:0.02em; font-variant-numeric:tabular-nums">+56 9 9996 7675</span><span style="display:block; font-size:13px; color:var(--color-neutral-600)">WhatsApp y llamadas</span></span>
         </a>
         <div style="display:flex; align-items:flex-start; gap:14px; padding:18px 0">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-700); flex:none; margin-top:2px"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -1323,12 +1555,41 @@ a:hover { color: var(--color-accent-200); }
       <div class="field"><label for="wf3-dir" data-seg="hogar">Dirección de instalación</label><label for="wf3-dir" data-seg="empresas" hidden>Dirección de la sucursal u oficina</label><input class="input" id="wf3-dir" type="text" placeholder="Calle, número, sector" style="min-height:46px"></div>
 
       <div class="field" data-seg="hogar"><label>Plan que te interesa</label>
-        <div style="display:flex; flex-direction:column; gap:11px; margin-top:6px">
-          <label class="radio"><input type="radio" name="wf3-plan"><span class="dot"></span>Básico 400 Mbps — $13.990</label>
-          <label class="radio"><input type="radio" name="wf3-plan" checked><span class="dot"></span>Medio 650 Mbps — $19.990</label>
-          <label class="radio"><input type="radio" name="wf3-plan"><span class="dot"></span>Full 940 Mbps — $29.990</label>
-          <label class="radio"><input type="radio" name="wf3-plan"><span class="dot"></span>Duo con TV — desde $21.990</label>
-        </div>
+        <!-- Todos los planes agrupados por categoría. Reutiliza el script ACORDEÓN.
+             Todas las opciones comparten name="wf3-plan": se elige UN solo plan. -->
+        <ul class="wf-acc wf-acc--form" data-acordeon>
+          <li class="wf-acc-i is-open">
+            <h3><button type="button" class="wf-acc-b" aria-expanded="true" aria-controls="fp-1"><span class="wf-acc-n">3</span><span class="wf-acc-t">Solo internet</span><span class="wf-acc-x" aria-hidden="true"></span></button></h3>
+            <div class="wf-acc-p" id="fp-1"><div><div class="wf-acc-radios">
+              <label class="radio"><input type="radio" name="wf3-plan" value="Internet Básico 400 Mbps"><span class="dot"></span>Básico 400 Mbps — $13.990</label>
+              <label class="radio"><input type="radio" name="wf3-plan" value="Internet Medio 650 Mbps" checked><span class="dot"></span>Medio 650 Mbps — $19.990</label>
+              <label class="radio"><input type="radio" name="wf3-plan" value="Internet Full 940 Mbps"><span class="dot"></span>Full 940 Mbps — $29.990</label>
+            </div></div></div>
+          </li>
+          <li class="wf-acc-i">
+            <h3><button type="button" class="wf-acc-b" aria-expanded="false" aria-controls="fp-2"><span class="wf-acc-n">3</span><span class="wf-acc-t">Internet + TV</span><span class="wf-acc-x" aria-hidden="true"></span></button></h3>
+            <div class="wf-acc-p" id="fp-2"><div><div class="wf-acc-radios">
+              <label class="radio"><input type="radio" name="wf3-plan" value="Duo Básico 400 Mbps"><span class="dot"></span>Duo Básico 400 Mbps — $21.990</label>
+              <label class="radio"><input type="radio" name="wf3-plan" value="Duo Medio 650 Mbps"><span class="dot"></span>Duo Medio 650 Mbps — $27.990</label>
+              <label class="radio"><input type="radio" name="wf3-plan" value="Duo Full 940 Mbps"><span class="dot"></span>Duo Full 940 Mbps — $35.990</label>
+            </div></div></div>
+          </li>
+          <li class="wf-acc-i">
+            <h3><button type="button" class="wf-acc-b" aria-expanded="false" aria-controls="fp-3"><span class="wf-acc-n">1</span><span class="wf-acc-t">Antena</span><span class="wf-acc-x" aria-hidden="true"></span></button></h3>
+            <div class="wf-acc-p" id="fp-3"><div><div class="wf-acc-radios">
+              <label class="radio"><input type="radio" name="wf3-plan" value="Internet por antena"><span class="dot"></span>Internet por antena — según factibilidad</label>
+            </div></div></div>
+          </li>
+          <li class="wf-acc-i">
+            <h3><button type="button" class="wf-acc-b" aria-expanded="false" aria-controls="fp-4"><span class="wf-acc-n">4</span><span class="wf-acc-t">DGO</span><span class="wf-acc-x" aria-hidden="true"></span></button></h3>
+            <div class="wf-acc-p" id="fp-4"><div><div class="wf-acc-radios">
+              <label class="radio"><input type="radio" name="wf3-plan" value="DGO Lite + DSports"><span class="dot"></span>Lite + DSports — $7.200</label>
+              <label class="radio"><input type="radio" name="wf3-plan" value="DGO Streaming"><span class="dot"></span>Streaming — $22.900</label>
+              <label class="radio"><input type="radio" name="wf3-plan" value="DGO Fútbol"><span class="dot"></span>Fútbol — $18.900</label>
+              <label class="radio"><input type="radio" name="wf3-plan" value="DGO Fútbol Total"><span class="dot"></span>Fútbol Total — $21.900</label>
+            </div></div></div>
+          </li>
+        </ul>
       </div>
 
       <div class="field" data-seg="empresas" hidden><label>Servicio que necesitas</label>
@@ -1371,14 +1632,14 @@ a:hover { color: var(--color-accent-200); }
     <div>
       <span style="display:block; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-accent-300); margin-bottom:14px">Contacto</span>
       <div style="display:flex; flex-direction:column; gap:9px; font-size:14px">
-        <a href="https://wa.me/56989798503" target="_blank" rel="noopener" style="color:var(--color-bg); text-decoration:none; font-variant-numeric:tabular-nums">+56 9 8979 8503</a>
-        <a href="tel:+56999967675" style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none; font-variant-numeric:tabular-nums">+56 9 9996 7675</a>
+        <a href="https://wa.me/56989798503" target="_blank" rel="noopener" style="color:var(--color-bg); text-decoration:none; font-variant-numeric:tabular-nums"><span style="display:block; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--color-accent-300)">Melipilla</span>+56 9 8979 8503</a>
+        <a href="https://wa.me/56999967675" target="_blank" rel="noopener" style="color:var(--color-bg); text-decoration:none; font-variant-numeric:tabular-nums"><span style="display:block; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--color-accent-300)">Paine</span>+56 9 9996 7675</a>
         <a href="https://www.wifired.cl" target="_blank" rel="noopener" style="color:color-mix(in srgb, var(--color-bg) 72%, transparent); text-decoration:none">www.wifired.cl</a>
         <span>Melipilla, Región Metropolitana</span>
       </div>
     </div>
   </div>
-  <div style="border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)"><div style="max-width:1240px; margin:0 auto; padding:18px clamp(20px,5vw,64px); display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; font-size:12px; color:color-mix(in srgb, var(--color-bg) 50%, transparent)"><span>© 2026 WiFired Telecomunicaciones</span><span style="letter-spacing:0.1em; text-transform:uppercase">Fibra propia · Melipilla</span></div></div>
+  <div style="border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)"><div style="max-width:1240px; margin:0 auto; padding:18px clamp(20px,5vw,64px); display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; font-size:12px; color:color-mix(in srgb, var(--color-bg) 50%, transparent)"><span>© 2026 WiFired Telecomunicaciones · <a href="assets/terminos-y-condiciones.pdf" download="Terminos-y-condiciones-WiFired.pdf" style="color:inherit; text-decoration:underline; text-underline-offset:3px">Términos y condiciones</a></span><span style="letter-spacing:0.1em; text-transform:uppercase">Fibra propia · Melipilla</span></div></div>
 </footer>
 
 <a id="wf-fab" href="https://wa.me/56989798503" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" title="Escríbenos por WhatsApp"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.7-.85-2-.95-.26-.1-.45-.15-.64.15-.19.28-.73.94-.9 1.13-.16.19-.33.21-.62.07-.29-.15-1.23-.45-2.34-1.44-.86-.77-1.44-1.72-1.61-2-.17-.29-.02-.44.13-.59.13-.13.29-.34.43-.51.15-.17.19-.29.29-.48.1-.19.05-.36-.02-.51-.07-.15-.64-1.55-.88-2.12-.23-.55-.47-.48-.64-.49l-.55-.01c-.19 0-.5.07-.76.36-.26.28-1 .98-1 2.38s1.02 2.76 1.17 2.95c.14.19 2.01 3.08 4.88 4.32.68.29 1.21.47 1.63.6.68.22 1.31.19 1.8.11.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34z M12 2a10 10 0 0 0-8.6 15.05L2 22l5.05-1.32A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3 .78.8-2.92-.2-.31A8.2 8.2 0 1 1 12 20.2z"></path></svg></a>
@@ -1518,9 +1779,67 @@ a:hover { color: var(--color-accent-200); }
       var max = (h.scrollHeight - h.clientHeight) || 1;
       var p = Math.min(1, Math.max(0, (window.scrollY || h.scrollTop) / max));
       if (fill) fill.style.transform = 'scaleX(' + p + ')';
+      // Cabecera flotante: transparente arriba, sólida apenas se baja
+      var hdr = document.querySelector('.wf-header');
+      if (hdr) hdr.classList.toggle('is-solid', (window.scrollY || h.scrollTop) > 24);
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+
+    /* Alto de la cabecera SÓLIDA → --wf-head (lo usa scroll-margin-top). Se mide
+       así porque al llegar a una sección la cabecera ya está sólida (más baja que
+       arriba). Se pone sólida un instante sin animación, se mide y se restaura. */
+    function medirCabecera() {
+      var hdr = document.querySelector('.wf-header');
+      if (!hdr) return;
+      var eraSolida = hdr.classList.contains('is-solid');
+      hdr.classList.add('wf-medir', 'is-solid');
+      var alto = hdr.offsetHeight;
+      if (!eraSolida) hdr.classList.remove('is-solid');
+      void hdr.offsetHeight; // aplica el cambio antes de devolver las animaciones
+      hdr.classList.remove('wf-medir');
+      document.documentElement.style.setProperty('--wf-head', alto + 'px');
+    }
+    var medida = 0;
+    window.addEventListener('resize', function () {
+      cancelAnimationFrame(medida);
+      medida = requestAnimationFrame(medirCabecera);
+    });
+    medirCabecera();
+
+    /* Deslizamiento suave al tocar un enlace "#seccion". Hecho a mano para que
+       siempre se deslice (el CSS smooth se apaga con "reducir animaciones" del
+       equipo). Dura según la distancia; si la persona mueve la rueda o el dedo,
+       se detiene. No cambia la dirección: así no se pierde el #empresas. */
+    var anim = 0;
+    function parar() { cancelAnimationFrame(anim); document.documentElement.style.scrollBehavior = ''; }
+    ['wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, parar, { passive: true }); });
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href^="#"]');
+      if (!a || e.defaultPrevented || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      var id = a.getAttribute('href');
+      var t = id.length > 1 && document.getElementById(id.slice(1));
+      if (!t || t.closest('[hidden]')) return;
+      e.preventDefault();
+      parar();
+      var h = document.documentElement;
+      var head = parseFloat(getComputedStyle(h).getPropertyValue('--wf-head')) || 80;
+      var extra = parseFloat(getComputedStyle(t).scrollMarginTop) - head || 0; // p. ej. #cobertura
+      var desde = window.scrollY;
+      var hasta = Math.max(0, Math.min(t.getBoundingClientRect().top + desde - head - extra, h.scrollHeight - h.clientHeight));
+      var dist = hasta - desde;
+      var dur = Math.min(1100, Math.max(450, Math.abs(dist) * 0.35));
+      var t0 = null;
+      h.style.scrollBehavior = 'auto'; // cada paso es inmediato; el suavizado lo da la curva
+      function paso(ahora) {
+        if (t0 === null) t0 = ahora;
+        var p = Math.min(1, (ahora - t0) / dur);
+        var c = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; // acelera y frena
+        window.scrollTo(0, desde + dist * c);
+        if (p < 1) anim = requestAnimationFrame(paso); else h.style.scrollBehavior = '';
+      }
+      anim = requestAnimationFrame(paso);
+    });
 
     function fmt(v, dec) { var s = v.toFixed(dec); if (dec > 0) s = s.replace('.', ','); return s; }
     /* Contador animado. Si el elemento trae data-gauge, mueve además el arco del
@@ -1610,6 +1929,8 @@ a:hover { color: var(--color-accent-200); }
       if (edges.length) { var n = Math.min(16, Math.round(edges.length / 8)); for (var k = 0; k < n; k++) packets.push(spawn()); }
     }
     function frame() {
+      // Portada oculta (vista Empresas) o sin medir: no dibujar, solo esperar
+      if (!W || !H) { raf = requestAnimationFrame(frame); return; }
       ctx.clearRect(0, 0, W, H);
       var t = performance.now() / 1000;
       ctx.lineWidth = 1;
@@ -1636,52 +1957,28 @@ a:hover { color: var(--color-accent-200); }
       }
       raf = requestAnimationFrame(frame);
     }
-    build();
-    window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(build, 200); });
-    if (!MOTION || reduce) {
+    var estatico = (!MOTION || reduce);
+    function pintarEstatico() {
+      if (!W || !H) return;
       ctx.clearRect(0, 0, W, H); ctx.lineWidth = 1;
       for (var ei = 0; ei < edges.length; ei++) { var Ea = nodes[edges[ei].a], Eb = nodes[edges[ei].b]; ctx.strokeStyle = 'rgba(181,217,253,0.06)'; ctx.beginPath(); ctx.moveTo(Ea.x, Ea.y); ctx.lineTo(Eb.x, Eb.y); ctx.stroke(); }
       for (var ni = 0; ni < nodes.length; ni++) { ctx.fillStyle = 'rgba(214,235,255,0.16)'; ctx.beginPath(); ctx.arc(nodes[ni].x, nodes[ni].y, 1.4, 0, 6.283); ctx.fill(); }
-      return;
     }
+    /* Redibujar cuando cambie el tamaño REAL del lienzo, no solo el de la ventana.
+       Antes solo escuchaba 'resize': si la portada cambiaba de alto por otra causa
+       (fuentes, cambio Hogar/Empresas, barra del celular) el dibujo quedaba estirado
+       y los brillos se veían como manchas alargadas. */
+    function sincronizar() {
+      var r = cv.getBoundingClientRect();
+      if (Math.abs(r.width - W) > 1 || Math.abs(r.height - H) > 1) { build(); if (estatico) pintarEstatico(); }
+    }
+    build();
+    window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(sincronizar, 150); });
+    if ('ResizeObserver' in window) new ResizeObserver(sincronizar).observe(cv);
+    if (estatico) { pintarEstatico(); return; }
     frame();
   })();
 
-  /* ---------- Ojo que sigue el cursor ---------- */
-  (function initEye() {
-    if (reduce) return;
-    var eye = document.getElementById('wf-eye');
-    var ap = document.getElementById('wf-ap');
-    var lid = document.getElementById('wf-lid');
-    var gaze = document.getElementById('wf-gaze');
-    var pupil = document.getElementById('wf-pupil');
-    if (!eye || !ap || !lid || !gaze) return;
-    var mx = window.innerWidth / 2, my = window.innerHeight / 2, want = 0, cur = 0, ox = 0, oy = 0, blink = 0;
-    window.addEventListener('pointermove', function (e) {
-      mx = e.clientX; my = e.clientY;
-      var t = e.target;
-      want = (t && t.closest && t.closest('a,button,input,textarea,.btn,.blueprint,[data-eye]')) ? 1 : 0;
-    }, { passive: true });
-    (function scheduleBlink() { setTimeout(function () { blink = performance.now(); scheduleBlink(); }, 3600 + Math.random() * 4200); })();
-    (function loop() {
-      var r = eye.getBoundingClientRect();
-      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-      var ang = Math.atan2(my - cy, mx - cx);
-      cur += (want - cur) * 0.12;
-      var bf = 1;
-      if (blink) { var bt = (performance.now() - blink) / 170; if (bt >= 1) blink = 0; else bf = Math.max(0.05, Math.abs(Math.cos(bt * Math.PI))); }
-      var ry = (15 + cur * 17) * bf;
-      ap.setAttribute('ry', ry.toFixed(2));
-      lid.setAttribute('ry', ry.toFixed(2));
-      var off = 14;
-      var tx = Math.cos(ang) * off, ty = Math.sin(ang) * off * (0.32 + 0.68 * cur);
-      ox += (tx - ox) * 0.16; oy += (ty - oy) * 0.16;
-      gaze.setAttribute('transform', 'translate(' + ox.toFixed(2) + ',' + oy.toFixed(2) + ')');
-      if (pupil) pupil.setAttribute('rx', (4.5 + cur * 2.6).toFixed(2));
-      eye.style.filter = 'drop-shadow(0 0 ' + (6 + cur * 16).toFixed(1) + 'px rgba(181,217,253,' + (0.4 + cur * 0.5).toFixed(2) + '))';
-      requestAnimationFrame(loop);
-    })();
-  })();
 })();
 </script>
 
@@ -1984,6 +2281,88 @@ a:hover { color: var(--color-accent-200); }
       });
     });
   });
+})();
+</script>
+
+<script>
+/* ==========================================================================
+   CARRUSEL HORIZONTAL (rail) · para filas de tarjetas que no caben a lo ancho
+   Uso: <div data-rail> con botones [data-rail-prev] / [data-rail-next] y una
+   pista [data-rail-track]. Si todo cabe, las flechas se ocultan solas.
+   Hoy lo usa la pestaña DGO de Planes; sirve para cualquier otra fila.
+   ========================================================================== */
+(function () {
+  Array.prototype.forEach.call(document.querySelectorAll('[data-rail]'), function (rail) {
+    var track = rail.querySelector('[data-rail-track]');
+    var prev = rail.querySelector('[data-rail-prev]');
+    var next = rail.querySelector('[data-rail-next]');
+    if (!track || !prev || !next) return;
+
+    // Avanza exactamente una tarjeta (ancho + separación)
+    function paso() {
+      var card = track.firstElementChild;
+      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      return card ? card.getBoundingClientRect().width + gap : track.clientWidth * 0.8;
+    }
+    // Muestra cada flecha solo si hay algo hacia ese lado
+    function actualizar() {
+      var max = track.scrollWidth - track.clientWidth;
+      // Solo cuenta si la fila de verdad se desliza: en escritorio las esquinas "+"
+      // de las tarjetas sobresalen unos px y hacían creer que sobraba contenido
+      var desliza = /(auto|scroll)/.test(getComputedStyle(track).overflowX);
+      var sobra = desliza && max > 2;
+      prev.hidden = !sobra || track.scrollLeft <= 4;
+      next.hidden = !sobra || track.scrollLeft >= max - 4;
+    }
+    prev.addEventListener('click', function () { track.scrollBy({ left: -paso(), behavior: 'smooth' }); });
+    next.addEventListener('click', function () { track.scrollBy({ left: paso(), behavior: 'smooth' }); });
+    track.addEventListener('scroll', actualizar, { passive: true });
+    // Recalcular al cambiar de pestaña de planes (el panel pasa de oculto a visible)
+    document.addEventListener('change', function (e) {
+      if (e.target.matches && e.target.matches('input[name="wf-tab"]')) requestAnimationFrame(actualizar);
+    });
+    window.addEventListener('resize', actualizar);
+    // También al abrir la pestaña (pasa de oculto a visible y cambia de tamaño)
+    if ('ResizeObserver' in window) new ResizeObserver(actualizar).observe(track);
+    actualizar();
+  });
+})();
+</script>
+
+<script>
+/* ==========================================================================
+   MENÚ LATERAL (celular) · botón hamburguesa
+   Abre/cierra el panel .wf-menu agregando .menu-open a la cabecera.
+   Se cierra con: el fondo oscuro, la tecla Esc, al elegir una opción, o si la
+   pantalla vuelve a tamaño escritorio.
+   ========================================================================== */
+(function () {
+  var header = document.querySelector('.wf-header');
+  var btn = document.querySelector('.wf-burger');
+  var menu = document.getElementById('wf-menu');
+  var fondo = document.querySelector('.wf-menu-bg');
+  if (!header || !btn || !menu) return;
+  var celular = window.matchMedia('(max-width: 720px)');
+
+  function abrir(si) {
+    header.classList.toggle('menu-open', si);
+    document.documentElement.classList.toggle('wf-lock', si);
+    btn.setAttribute('aria-expanded', si ? 'true' : 'false');
+    btn.setAttribute('aria-label', si ? 'Cerrar menú' : 'Abrir menú');
+    // Foco al panel entero (lectores de pantalla entran al menú) sin marcar un enlace
+    if (si) menu.focus({ preventScroll: true });
+  }
+
+  btn.addEventListener('click', function () { abrir(!header.classList.contains('menu-open')); });
+  if (fondo) fondo.addEventListener('click', function () { abrir(false); });
+  // Al elegir un enlace o Hogar/Empresas, el menú se cierra solo
+  menu.addEventListener('click', function (e) {
+    if (celular.matches && e.target.closest('a, [data-seg-btn]')) abrir(false);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && header.classList.contains('menu-open')) { abrir(false); btn.focus(); }
+  });
+  if (celular.addEventListener) celular.addEventListener('change', function () { if (!celular.matches) abrir(false); });
 })();
 </script>
 

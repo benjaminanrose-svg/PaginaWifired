@@ -18,7 +18,10 @@ Enlaces inalámbricos y fibra óptica para hogares y empresas.
 - **Dirección:** C. Libertad 701 (Esq. Silva Chávez), Melipilla
 - **Horario:** Lunes a Sábado 9:00 - 18:00 hrs. Domingos cerrado.
 - **Emergencias WhatsApp:** 8:00 - 18:00 hrs
-- **Teléfonos:** +56 9 8979 8503 · +56 9 9996 7675
+- **Teléfonos (WhatsApp y llamadas):**
+  - **Melipilla:** +56 9 8979 8503 (es el principal: botón flotante y barra superior)
+  - **Paine:** +56 9 9996 7675
+  - En contacto y pie de página se muestran **iguales**, cada uno con su comuna.
 - **Sitio:** www.wifired.cl
 
 Ver [[Mapa y contacto]] para las coordenadas y el enlace a Google Maps.
