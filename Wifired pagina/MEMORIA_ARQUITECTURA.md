@@ -20,7 +20,7 @@
 |--------|------|---------|
 | Página completa | `index.html` | Todo el sitio en un archivo (HTML + CSS + JS) |
 | Reglas de trabajo | `CLAUDE.md` | Las 4 reglas del proyecto |
-| Logo | `assets/logo.png` | Logo a color en blanco |
+| Logo | `assets/logo.png` | Logo en blanco, 795×328. ⚠️ El archivo venía **cortado arriba** (ondas del wifi de la "i"). Se agregaron 10px arriba y se **redibujaron las 2 ondas exteriores** calzándolas con los trozos que quedaban (mismo centro 341,63 · radios 37 y 50,5 · grosor 9,5). Por eso las alturas del logo en CSS subieron 3%. La punta de la curva de la derecha sigue plana (no hay original). Si llega el logo original, reemplazar y volver las alturas atrás. `og-image.png` aún tiene el wifi cortado |
 | Favicon | `assets/favicon.png` | Ícono del navegador |
 | Ícono iOS | `assets/apple-touch-icon.png` | Para iPhone |
 | Imagen al compartir | `assets/og-image.png` | WhatsApp, Facebook, LinkedIn |

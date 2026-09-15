@@ -464,8 +464,8 @@ a:hover { color: var(--color-accent-200); }
 .wf-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; padding: clamp(12px,1.6vw,18px) clamp(20px,5vw,64px); background: transparent; border-bottom: 1px solid transparent; transition: background .35s ease, border-color .35s ease, padding .35s ease; }
 .wf-header.is-solid .wf-nav { padding-top: 10px; padding-bottom: 10px; background: color-mix(in srgb, var(--color-accent-900) 86%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom-color: color-mix(in srgb, var(--color-accent-300) 16%, transparent); }
 .wf-brand { display: flex; align-items: center; gap: 16px; justify-self: start; min-width: 0; }
-.wf-logo { display: block; width: auto; max-width: none; object-fit: contain; height: clamp(54px,5.6vw,78px); filter: drop-shadow(0 2px 10px rgba(0,0,0,.35)); transition: height .35s cubic-bezier(.22,.61,.36,1); }
-.wf-header.is-solid .wf-logo { height: clamp(44px,3.8vw,54px); }
+.wf-logo { display: block; width: auto; max-width: none; object-fit: contain; height: clamp(56px,5.8vw,80px); filter: drop-shadow(0 2px 10px rgba(0,0,0,.35)); transition: height .35s cubic-bezier(.22,.61,.36,1); }
+.wf-header.is-solid .wf-logo { height: clamp(45px,3.9vw,56px); } /* +3%: el logo ganó 10px arriba para el wifi */
 .wf-navlinks { display: flex; align-items: center; gap: clamp(18px,2.4vw,34px); justify-self: center; }
 /* Contratar va dentro del menú central, como parte de la barra flotante */
 /* Sin fondo: solo borde y texto claro (estilo "Tengo cuenta" de DGO) */
@@ -1614,7 +1614,7 @@ a:hover { color: var(--color-accent-200); }
 <footer style="background:var(--color-accent-900); color:color-mix(in srgb, var(--color-bg) 72%, transparent); border-top:1px solid color-mix(in srgb, var(--color-bg) 12%, transparent)">
   <div style="max-width:1240px; margin:0 auto; padding:clamp(44px,5vw,64px) clamp(20px,5vw,64px); display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:36px">
     <div>
-      <img src="assets/logo.png" alt="WiFired Telecomunicaciones" style="display:block; height:56px; width:auto; max-width:none; object-fit:contain">
+      <img src="assets/logo.png" alt="WiFired Telecomunicaciones" style="display:block; height:58px; width:auto; max-width:none; object-fit:contain">
       <p style="font-size:13.5px; line-height:1.6; margin:18px 0 0; max-width:30ch">Internet de banda ancha, televisión y soporte técnico en Melipilla, Región Metropolitana.</p>
     </div>
     <div>
