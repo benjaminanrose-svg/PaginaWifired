@@ -27,6 +27,7 @@
 | Términos y condiciones | `assets/terminos-y-condiciones.pdf` | **Provisorio**: solo dice el título. Se descarga con `download` desde el menú del celular y el pie. Para reemplazarlo, sube el PDF real con el **mismo nombre** |
 | Fuentes | `assets/fonts/*.woff2` | Barlow y Barlow Condensed |
 | Servidor local | `.claude/launch.json` | `npx serve` en el puerto 8080 |
+| **Publicación** | Railway | `https://paginawifired-production.up.railway.app` (puerto 8080). **Ya no es Netlify** (desde 15-09-2026). Sin archivos de configuración: Railway detecta el sitio estático solo. Se actualiza al hacer commit + push. Las etiquetas `og:url`, `og:image` y `twitter:image` del `<head>` apuntan a este dominio porque `www.wifired.cl` daba 404; cambiarlas cuando el dominio propio apunte a Railway |
 | Esta bóveda | `Wifired pagina/` | Notas del proyecto (no va al repo) |
 
 ## Secciones del sitio, en orden
